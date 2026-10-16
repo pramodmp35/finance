@@ -1,0 +1,1476 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#070D1A" />
+    <title>Login — STACKLY | Institutional Finance, Delivered</title>
+    <meta
+      name="description"
+      content="Sign in to your STACKLY dashboard. Role-based access for administrators and users."
+    />
+
+    <!-- ================= FAVICON ================= -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2300E5A0'/%3E%3Cpath d='M10 26 L16 14 L22 26' stroke='%2304140E' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+
+    <!-- ================= FONTS ================= -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ================= BOOTSTRAP 5 ================= -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- ================= AOS ================= -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+
+    <!-- ================= STYLES ================= -->
+    <style>
+      :root {
+        --ink-900: #070d1a;
+        --ink-800: #0e1729;
+        --ink-700: #1b2740;
+        --mint: #00e5a0;
+        --mint-400: #33edb6;
+        --mist: #f5f7fb;
+        --muted: #8a94a8;
+        --danger: #ff5c7a;
+        --line: rgba(255, 255, 255, 0.09);
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--ink-900);
+        color: var(--mist);
+        font-family: "Inter", system-ui, sans-serif;
+        min-height: 100svh;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+      ::selection {
+        background: var(--mint);
+        color: #04140e;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      img {
+        max-width: 100%;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Sora", sans-serif;
+        letter-spacing: -0.02em;
+        color: var(--mist);
+        margin: 0;
+      }
+
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--ink-900);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--ink-700);
+        border-radius: 99px;
+        border: 2px solid var(--ink-900);
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #2c3d5e;
+      }
+
+      /* ================= GRAIN ================= */
+      .grain {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      /* ================= SHARED ================= */
+      .grad {
+        background: linear-gradient(
+          100deg,
+          #00e5a0 0%,
+          #33edb6 45%,
+          #7cf7d8 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.42rem 0.95rem;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 229, 160, 0.28);
+        background: rgba(0, 229, 160, 0.07);
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--mint-400);
+      }
+      .eyebrow .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--mint);
+        box-shadow: 0 0 0 0 rgba(0, 229, 160, 0.7);
+        animation: pulse 2.2s infinite;
+      }
+      @keyframes pulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(0, 229, 160, 0.6);
+        }
+        70% {
+          box-shadow: 0 0 0 9px rgba(0, 229, 160, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(0, 229, 160, 0);
+        }
+      }
+
+      /* ================= PAGE LAYOUT ================= */
+      .login-page {
+        position: relative;
+        min-height: 100svh;
+        display: grid;
+        grid-template-columns: 1fr;
+        overflow: hidden;
+        background:
+          radial-gradient(
+            110% 80% at 82% 10%,
+            rgba(0, 229, 160, 0.13) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            90% 70% at 10% 92%,
+            rgba(14, 165, 233, 0.09) 0%,
+            transparent 60%
+          ),
+          linear-gradient(180deg, #070d1a 0%, #0a1220 100%);
+      }
+      @media (min-width: 992px) {
+        .login-page {
+          grid-template-columns: 1.05fr 1fr;
+        }
+      }
+
+      .login-grid-bg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.45;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 64px 64px;
+        mask-image: radial-gradient(
+          ellipse 80% 62% at 50% 40%,
+          #000 25%,
+          transparent 78%
+        );
+        -webkit-mask-image: radial-gradient(
+          ellipse 80% 62% at 50% 40%,
+          #000 25%,
+          transparent 78%
+        );
+      }
+      .login-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(90px);
+        pointer-events: none;
+        will-change: transform;
+      }
+      .login-orb-1 {
+        width: 340px;
+        height: 340px;
+        background: rgba(0, 229, 160, 0.16);
+        top: -90px;
+        right: -70px;
+      }
+      .login-orb-2 {
+        width: 300px;
+        height: 300px;
+        background: rgba(14, 165, 233, 0.11);
+        bottom: -100px;
+        left: -90px;
+      }
+
+      /* ================= LEFT PANEL ================= */
+      .login-left {
+        position: relative;
+        z-index: 3;
+        padding: 2rem 1.5rem 2.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        border-bottom: 1px solid var(--line);
+      }
+      @media (min-width: 992px) {
+        .login-left {
+          padding: 3rem 3.5rem 3rem 3.5rem;
+          border-bottom: none;
+          border-right: 1px solid var(--line);
+          justify-content: space-between;
+        }
+      }
+      @media (min-width: 1200px) {
+        .login-left {
+          padding: 3.5rem 4.5rem;
+        }
+      }
+
+      /* Brand logo (img tag — swap src) */
+      .login-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.85rem;
+        align-self: flex-start;
+      }
+      .login-brand-logo {
+        height: 70px;
+        width: auto;
+        display: block;
+        object-fit: contain;
+      }
+      @media (min-width: 992px) {
+        .login-brand-logo {
+          height: 70px;
+        }
+      }
+      .login-brand-name {
+        font-family: "Sora", sans-serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+      @media (min-width: 992px) {
+        .login-brand-name {
+          font-size: 1.3rem;
+        }
+      }
+
+      /* Headline block */
+      .login-headline h1 {
+        font-size: clamp(1.7rem, 4.6vw, 2.6rem);
+        font-weight: 700;
+        line-height: 1.14;
+        letter-spacing: -0.03em;
+        margin: 1rem 0 0.9rem;
+      }
+      .login-headline p {
+        color: var(--muted);
+        font-size: 0.98rem;
+        line-height: 1.8;
+        max-width: 520px;
+        margin: 0;
+      }
+      @media (min-width: 992px) {
+        .login-headline p {
+          font-size: 1.02rem;
+        }
+      }
+
+      /* Feature bullets */
+      .login-points {
+        list-style: none;
+        margin: 1.8rem 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+      }
+      .login-points li {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.7rem;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        color: rgba(245, 247, 251, 0.86);
+      }
+      .login-points .tick {
+        flex-shrink: 0;
+        margin-top: 0.1rem;
+        width: 20px;
+        height: 20px;
+        border-radius: 7px;
+        display: grid;
+        place-items: center;
+        background: rgba(0, 229, 160, 0.14);
+        border: 1px solid rgba(0, 229, 160, 0.3);
+        color: var(--mint);
+      }
+
+      /* Bottom block: Go Home button + meta */
+      .login-left-foot {
+        display: flex;
+        flex-direction: column;
+        gap: 1.1rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--line);
+      }
+      @media (min-width: 992px) {
+        .login-left-foot {
+          padding-top: 1.6rem;
+        }
+      }
+
+      .btn-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        align-self: flex-start;
+        padding: 0.85rem 1.6rem;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 229, 160, 0.4);
+        background: rgba(0, 229, 160, 0.07);
+        color: var(--mint);
+        font-family: "Sora", sans-serif;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.35s var(--ease);
+        backdrop-filter: blur(8px);
+      }
+      .btn-home:hover {
+        background: var(--mint);
+        border-color: var(--mint);
+        color: #04140e;
+        transform: translateY(-2px);
+        box-shadow: 0 16px 36px -16px rgba(0, 229, 160, 0.95);
+      }
+      .btn-home svg {
+        transition: transform 0.35s var(--ease);
+      }
+      .btn-home:hover svg {
+        transform: translateX(-3px);
+      }
+
+      .login-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.4rem;
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+      .login-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+      }
+      .login-meta svg {
+        color: var(--mint);
+        flex-shrink: 0;
+      }
+
+      /* ================= RIGHT PANEL (FORM) ================= */
+      .login-right {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2.5rem 1.25rem 3rem;
+      }
+      @media (min-width: 992px) {
+        .login-right {
+          padding: 3rem 3.5rem;
+        }
+      }
+      @media (min-width: 1200px) {
+        .login-right {
+          padding: 3.5rem 4.5rem;
+        }
+      }
+
+      .login-card {
+        width: 100%;
+        max-width: 460px;
+        position: relative;
+      }
+
+      .login-card-head {
+        margin-bottom: 1.8rem;
+      }
+      .login-card-head h2 {
+        font-size: clamp(1.5rem, 3.6vw, 1.85rem);
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        margin: 0 0 0.55rem;
+      }
+      .login-card-head p {
+        color: var(--muted);
+        font-size: 0.92rem;
+        line-height: 1.65;
+        margin: 0;
+      }
+
+      /* Role selector (segmented control) */
+      .role-label {
+        display: block;
+        font-family: "Sora", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0 0 0.7rem;
+      }
+
+      .role-toggle {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.3rem;
+        padding: 0.32rem;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+      .role-btn {
+        position: relative;
+        z-index: 2;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        font-family: "Sora", sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 0.75rem 0.6rem;
+        border-radius: 11px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: color 0.35s var(--ease);
+      }
+      .role-btn svg {
+        transition: color 0.35s var(--ease);
+      }
+      .role-btn.is-active {
+        color: #04140e;
+      }
+      .role-btn.is-active svg {
+        color: #04140e;
+      }
+      .role-glow {
+        position: absolute;
+        top: 0.32rem;
+        bottom: 0.32rem;
+        left: 0.32rem;
+        width: calc(50% - 0.46rem);
+        border-radius: 11px;
+        background: var(--mint);
+        box-shadow: 0 10px 26px -10px rgba(0, 229, 160, 0.9);
+        transition: transform 0.42s var(--ease);
+        z-index: 1;
+      }
+      .role-toggle[data-role="user"] .role-glow {
+        transform: translateX(calc(100% + 0.3rem));
+      }
+
+      /* Form fields */
+      .form-row {
+        margin-bottom: 1.15rem;
+        position: relative;
+      }
+      .form-row label {
+        display: block;
+        font-family: "Sora", sans-serif;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: rgba(245, 247, 251, 0.78);
+        margin: 0 0 0.55rem;
+      }
+
+      .field-wrap {
+        position: relative;
+      }
+      .field-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        pointer-events: none;
+        transition: color 0.3s var(--ease);
+        display: inline-flex;
+      }
+
+      .login-field {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.95rem 3rem 0.95rem 2.85rem;
+        color: var(--mist);
+        font-size: 0.93rem;
+        font-family: "Inter", sans-serif;
+        color-scheme: dark;
+        transition:
+          border-color 0.3s var(--ease),
+          box-shadow 0.3s var(--ease),
+          background 0.3s var(--ease);
+      }
+      .login-field::placeholder {
+        color: rgba(138, 148, 168, 0.6);
+      }
+      .login-field:focus {
+        outline: none;
+        border-color: var(--mint);
+        background: rgba(0, 229, 160, 0.045);
+        box-shadow: 0 0 0 4px rgba(0, 229, 160, 0.13);
+      }
+      .login-field:focus ~ .field-icon {
+        color: var(--mint);
+      }
+      .login-field.is-invalid {
+        border-color: var(--danger);
+        background: rgba(255, 92, 122, 0.055);
+        box-shadow: 0 0 0 4px rgba(255, 92, 122, 0.11);
+      }
+
+      .toggle-pw {
+        position: absolute;
+        right: 0.6rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        border-radius: 8px;
+        cursor: pointer;
+        transition:
+          color 0.3s var(--ease),
+          background 0.3s var(--ease);
+      }
+      .toggle-pw:hover {
+        color: var(--mint);
+        background: rgba(0, 229, 160, 0.08);
+      }
+
+      .err-msg {
+        display: none;
+        margin: 0.4rem 0 0;
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: #ff8ca1;
+        align-items: center;
+        gap: 0.35rem;
+      }
+      .err-msg.show {
+        display: flex;
+      }
+
+      /* Row: remember + forgot */
+      .form-aux {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin: 0.35rem 0 1.6rem;
+      }
+
+      .remember {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        cursor: pointer;
+        font-size: 0.85rem;
+        color: rgba(245, 247, 251, 0.82);
+        user-select: none;
+      }
+      .remember input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .remember .box {
+        width: 18px;
+        height: 18px;
+        border-radius: 5px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        display: grid;
+        place-items: center;
+        transition: all 0.3s var(--ease);
+        flex-shrink: 0;
+      }
+      .remember .box svg {
+        opacity: 0;
+        transform: scale(0.6);
+        transition: all 0.25s var(--ease);
+        color: #04140e;
+      }
+      .remember input:checked ~ .box {
+        background: var(--mint);
+        border-color: var(--mint);
+      }
+      .remember input:checked ~ .box svg {
+        opacity: 1;
+        transform: scale(1);
+      }
+      .remember input:focus-visible ~ .box {
+        box-shadow: 0 0 0 4px rgba(0, 229, 160, 0.18);
+      }
+
+      .link-mint {
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--mint);
+        transition: color 0.3s var(--ease);
+      }
+      .link-mint:hover {
+        color: var(--mint-400);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      /* Submit button */
+      .btn-submit {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.55rem;
+        padding: 1.05rem 1.6rem;
+        border-radius: 999px;
+        border: none;
+        background: var(--mint);
+        color: #04140e;
+        font-family: "Sora", sans-serif;
+        font-weight: 700;
+        font-size: 0.92rem;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        transition:
+          transform 0.35s var(--ease),
+          box-shadow 0.35s var(--ease),
+          background 0.35s var(--ease);
+        box-shadow: 0 18px 44px -18px rgba(0, 229, 160, 0.9);
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-submit:hover {
+        transform: translateY(-3px);
+        background: var(--mint-400);
+        box-shadow: 0 26px 56px -18px rgba(0, 229, 160, 1);
+      }
+      .btn-submit:disabled {
+        opacity: 0.85;
+        cursor: wait;
+        transform: none;
+      }
+      .btn-submit svg {
+        transition: transform 0.35s var(--ease);
+      }
+      .btn-submit:hover svg {
+        transform: translateX(4px);
+      }
+
+      /* Spinner */
+      .spinner {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid rgba(4, 20, 14, 0.3);
+        border-top-color: #04140e;
+        animation: spin 0.7s linear infinite;
+        display: none;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .btn-submit.is-loading .spinner {
+        display: inline-block;
+      }
+      .btn-submit.is-loading .btn-label,
+      .btn-submit.is-loading .btn-arrow {
+        display: none;
+      }
+
+      /* Divider */
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 1.6rem 0;
+        color: var(--muted);
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.12),
+          transparent
+        );
+      }
+
+      /* Signup prompt */
+      .signup-prompt {
+        text-align: center;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+      .signup-prompt a {
+        color: var(--mint);
+        font-weight: 600;
+        transition: color 0.3s var(--ease);
+      }
+      .signup-prompt a:hover {
+        color: var(--mint-400);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      /* Note under form */
+      .login-note {
+        margin-top: 1.8rem;
+        padding: 1rem 1.1rem;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.025);
+        font-size: 0.78rem;
+        line-height: 1.65;
+        color: var(--muted);
+        display: flex;
+        gap: 0.7rem;
+      }
+      .login-note svg {
+        color: var(--mint);
+        flex-shrink: 0;
+        margin-top: 0.15rem;
+      }
+      .login-note strong {
+        color: rgba(245, 247, 251, 0.9);
+        font-weight: 600;
+      }
+
+      /* ================= REDUCED MOTION ================= */
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <main class="login-page" id="main">
+      <div class="login-grid-bg" aria-hidden="true"></div>
+      <div class="login-orb login-orb-1" id="orb1" aria-hidden="true"></div>
+      <div class="login-orb login-orb-2" id="orb2" aria-hidden="true"></div>
+
+      <!-- =========================================================
+           LEFT PANEL — Company details + logo + Go Home
+           ========================================================= -->
+      <section class="login-left">
+        <div data-aos="fade-up">
+          <!-- Brand: img tag — replace src with your own logo -->
+          <a href="index.html" class="login-brand" aria-label="STACKLY home">
+            <img
+              id="brandLogo"
+              class="login-brand-logo"
+              src="./assets/logo.webp"
+              alt="STACKLY"
+            />
+          </a>
+
+          <div class="login-headline" style="margin-top: 2.4rem">
+            <span class="eyebrow"><span class="dot"></span> Client Portal</span>
+            <h1>
+              Welcome back to
+              <span class="grad">institutional-grade</span> advisory.
+            </h1>
+            <p>
+              Sign in to access your portfolio dashboards, regulatory reporting,
+              treasury positions and research briefings — all in one secure
+              workspace.
+            </p>
+          </div>
+
+          <ul class="login-points">
+            <li>
+              <span class="tick" aria-hidden="true">
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </span>
+              Encrypted, audit-logged access to every mandate you hold.
+            </li>
+            <li>
+              <span class="tick" aria-hidden="true">
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </span>
+              Role-based permissions for administrators and analysts.
+            </li>
+            <li>
+              <span class="tick" aria-hidden="true">
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </span>
+              Same-day support from the partner leading your engagement.
+            </li>
+          </ul>
+        </div>
+
+        <div class="login-left-foot" data-aos="fade-up" data-aos-delay="80">
+          <a href="index.html" class="btn-home">
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+            Go to Home
+          </a>
+
+          <div class="login-meta">
+            <span>
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <rect x="4" y="10" width="16" height="10" rx="2" />
+                <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+              </svg>
+              256-bit encryption
+            </span>
+            <span>
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path
+                  d="M12 2 4 6v6c0 5 3.4 8.8 8 10 4.6-1.2 8-5 8-10V6l-8-4Z"
+                />
+              </svg>
+              ISO 27001 certified
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           RIGHT PANEL — Login form
+           ========================================================= -->
+      <section class="login-right">
+        <div class="login-card" data-aos="fade-up" data-aos-delay="120">
+          <div class="login-card-head">
+            <h2>Sign in to your account</h2>
+            <p>
+              Choose your access role, enter your credentials and continue to
+              your dashboard.
+            </p>
+          </div>
+
+          <form id="loginForm" novalidate>
+            <!-- Role selector -->
+            <span class="role-label" id="roleLabel">Access role</span>
+            <div
+              class="role-toggle"
+              id="roleToggle"
+              data-role="admin"
+              role="radiogroup"
+              aria-labelledby="roleLabel"
+            >
+              <span class="role-glow" aria-hidden="true"></span>
+
+              <button
+                type="button"
+                class="role-btn is-active"
+                data-role="admin"
+                role="radio"
+                aria-checked="true"
+                id="roleAdmin"
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M12 2 4 6v6c0 5 3.4 8.8 8 10 4.6-1.2 8-5 8-10V6l-8-4Z"
+                  />
+                  <polyline points="9 12 11 14 15 10" />
+                </svg>
+                Admin
+              </button>
+
+              <button
+                type="button"
+                class="role-btn"
+                data-role="user"
+                role="radio"
+                aria-checked="false"
+                id="roleUser"
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                User
+              </button>
+            </div>
+
+            <!-- Email -->
+            <div class="form-row">
+              <label for="loginEmail">Email address</label>
+              <div class="field-wrap">
+                <input
+                  type="email"
+                  id="loginEmail"
+                  name="loginEmail"
+                  class="login-field"
+                  placeholder="you@company.com"
+                  autocomplete="email"
+                  inputmode="email"
+                />
+                <span class="field-icon" aria-hidden="true">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="m22 7-10 6L2 7" />
+                  </svg>
+                </span>
+              </div>
+              <p
+                class="err-msg"
+                id="emailErr"
+                role="alert"
+                aria-live="polite"
+              ></p>
+            </div>
+
+            <!-- Password -->
+            <div class="form-row">
+              <label for="loginPassword">Password</label>
+              <div class="field-wrap">
+                <input
+                  type="password"
+                  id="loginPassword"
+                  name="loginPassword"
+                  class="login-field"
+                  placeholder="Enter any password"
+                  autocomplete="current-password"
+                />
+                <span class="field-icon" aria-hidden="true">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="4" y="10" width="16" height="10" rx="2" />
+                    <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+                  </svg>
+                </span>
+                <button
+                  type="button"
+                  class="toggle-pw"
+                  id="togglePw"
+                  aria-label="Show password"
+                  aria-pressed="false"
+                >
+                  <svg
+                    id="eyeOpen"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  <svg
+                    id="eyeClosed"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    style="display: none"
+                  >
+                    <path
+                      d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"
+                    />
+                    <line x1="1" y1="1" x2="23" y2="23" />
+                  </svg>
+                </button>
+              </div>
+              <p class="err-msg" id="pwErr" role="alert" aria-live="polite"></p>
+            </div>
+
+            <!-- Remember + forgot -->
+            <div class="form-aux">
+              <label class="remember">
+                <input type="checkbox" id="rememberMe" checked />
+                <span class="box" aria-hidden="true">
+                  <svg
+                    width="11"
+                    height="11"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="3.4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                Remember me
+              </label>
+
+              <a href="./404.html" class="link-mint">Forgot password?</a>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="btn-submit" id="submitBtn">
+              <span class="spinner" aria-hidden="true"></span>
+              <span class="btn-label">Continue to Dashboard</span>
+              <svg
+                class="btn-arrow"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </button>
+          </form>
+
+          <!-- Divider -->
+          <div class="divider">New to STACKLY</div>
+
+          <!-- Signup prompt -->
+          <p class="signup-prompt">
+            Don't have an account?
+            <a href="./signup.html">Create one</a>
+          </p>
+
+          <!-- Note about demo access -->
+          <!-- <div class="login-note">
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 16v-4M12 8h.01" />
+            </svg>
+            <span>
+              <strong>Demo mode:</strong> any email and password combination
+              will sign you in. Your access level is determined by the role you
+              select above.
+            </span>
+          </div> -->
+        </div>
+      </section>
+    </main>
+
+    <!-- ================= SCRIPTS ================= -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+
+    <script>
+      /* =========================================================
+         0 · ENVIRONMENT
+         ========================================================= */
+      const hasGSAP = typeof gsap !== "undefined";
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      if (!hasGSAP) {
+        document.querySelectorAll("[data-aos]").forEach(function (el) {
+          el.removeAttribute("data-aos");
+        });
+      }
+
+      /* =========================================================
+         1 · AOS
+         ========================================================= */
+      if (typeof AOS !== "undefined") {
+        AOS.init({
+          duration: 800,
+          easing: "ease-out-cubic",
+          once: true,
+          offset: 70,
+          disable: reduceMotion,
+        });
+      }
+
+      /* =========================================================
+         2 · ROLE SELECTOR
+         ========================================================= */
+      const roleToggle = document.getElementById("roleToggle");
+      const roleBtns = Array.from(document.querySelectorAll(".role-btn"));
+      let currentRole = "admin"; // default
+
+      roleBtns.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          const role = btn.dataset.role;
+          if (!role || role === currentRole) return;
+
+          currentRole = role;
+          roleToggle.setAttribute("data-role", role);
+
+          roleBtns.forEach(function (b) {
+            const isActive = b.dataset.role === role;
+            b.classList.toggle("is-active", isActive);
+            b.setAttribute("aria-checked", isActive ? "true" : "false");
+          });
+        });
+      });
+
+      /* =========================================================
+         3 · PASSWORD VISIBILITY TOGGLE
+         ========================================================= */
+      const pwInput = document.getElementById("loginPassword");
+      const togglePw = document.getElementById("togglePw");
+      const eyeOpen = document.getElementById("eyeOpen");
+      const eyeClosed = document.getElementById("eyeClosed");
+
+      if (togglePw && pwInput) {
+        togglePw.addEventListener("click", function () {
+          const isPassword = pwInput.type === "password";
+          pwInput.type = isPassword ? "text" : "password";
+          togglePw.setAttribute(
+            "aria-label",
+            isPassword ? "Hide password" : "Show password",
+          );
+          togglePw.setAttribute("aria-pressed", isPassword ? "true" : "false");
+          if (eyeOpen) eyeOpen.style.display = isPassword ? "none" : "block";
+          if (eyeClosed)
+            eyeClosed.style.display = isPassword ? "block" : "none";
+        });
+      }
+
+      /* =========================================================
+         4 · FORM VALIDATION + SUBMIT
+         ========================================================= */
+      const loginForm = document.getElementById("loginForm");
+      const emailInput = document.getElementById("loginEmail");
+      const emailErr = document.getElementById("emailErr");
+      const pwErr = document.getElementById("pwErr");
+      const submitBtn = document.getElementById("submitBtn");
+      const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+
+      function showError(el, errEl, msg) {
+        el.classList.add("is-invalid");
+        errEl.textContent = msg;
+        errEl.classList.add("show");
+      }
+      function clearError(el, errEl) {
+        el.classList.remove("is-invalid");
+        errEl.classList.remove("show");
+        errEl.textContent = "";
+      }
+
+      // Live-clear email error
+      emailInput.addEventListener("input", function () {
+        if (EMAIL_RE.test(emailInput.value.trim()))
+          clearError(emailInput, emailErr);
+      });
+      emailInput.addEventListener("blur", function () {
+        const v = emailInput.value.trim();
+        if (v && !EMAIL_RE.test(v))
+          showError(
+            emailInput,
+            emailErr,
+            "Please enter a valid email address.",
+          );
+      });
+      pwInput.addEventListener("input", function () {
+        if (pwInput.value.trim().length > 0) clearError(pwInput, pwErr);
+      });
+
+      loginForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const email = emailInput.value.trim();
+        const pw = pwInput.value.trim();
+        let ok = true;
+
+        // Email validation
+        if (!email) {
+          showError(emailInput, emailErr, "Please enter your email address.");
+          ok = false;
+        } else if (!EMAIL_RE.test(email)) {
+          showError(
+            emailInput,
+            emailErr,
+            "Please enter a valid email address.",
+          );
+          ok = false;
+        } else {
+          clearError(emailInput, emailErr);
+        }
+
+        // Password validation — demo accepts anything non-empty
+        if (!pw) {
+          showError(pwInput, pwErr, "Please enter a password.");
+          ok = false;
+        } else {
+          clearError(pwInput, pwErr);
+        }
+
+        if (!ok) {
+          // shake the form
+          if (hasGSAP && !reduceMotion) {
+            gsap.fromTo(
+              ".login-card",
+              { x: -8 },
+              { x: 0, duration: 0.5, ease: "elastic.out(1, 0.35)" },
+            );
+          }
+          return;
+        }
+
+        // ── Persist session in localStorage ────────────────────
+        try {
+          localStorage.setItem("stackly_email", email);
+          localStorage.setItem("stackly_role", currentRole);
+          localStorage.setItem("stackly_logged_in", "true");
+          localStorage.setItem("stackly_login_time", new Date().toISOString());
+          // Convenience aliases
+          if (currentRole === "admin") {
+            localStorage.setItem("stackly_admin_email", email);
+          } else {
+            localStorage.setItem("stackly_user_email", email);
+          }
+        } catch (err) {
+          // localStorage might be disabled — continue anyway
+          console.warn("localStorage unavailable:", err);
+        }
+
+        // ── Loading state + redirect ───────────────────────────
+        submitBtn.classList.add("is-loading");
+        submitBtn.disabled = true;
+
+        setTimeout(function () {
+          if (currentRole === "admin") {
+            window.location.href = "./admin.html";
+          } else {
+            window.location.href = "./user.html";
+          }
+        }, 700);
+      });
+
+      /* =========================================================
+         5 · ENTRANCE ANIMATION + ORB DRIFT
+         ========================================================= */
+      if (hasGSAP && !reduceMotion) {
+        gsap.from(".login-brand-logo", {
+          y: 18,
+          opacity: 0,
+          duration: 0.7,
+          ease: "power3.out",
+        });
+
+        gsap.from(".role-toggle", {
+          y: 20,
+          opacity: 0,
+          duration: 0.7,
+          delay: 0.25,
+          ease: "power3.out",
+        });
+
+        gsap.to("#orb1", {
+          y: 80,
+          x: -30,
+          duration: 7,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+        });
+        gsap.to("#orb2", {
+          y: -70,
+          x: 40,
+          duration: 8,
+          ease: "sine.inOut",
+          yoyo: true,
+          repeat: -1,
+        });
+      }
+
+      /* =========================================================
+         6 · PRE-FILL EMAIL IF REMEMBERED
+         ========================================================= */
+      try {
+        const savedEmail = localStorage.getItem("stackly_email");
+        if (savedEmail && emailInput && !emailInput.value) {
+          emailInput.value = savedEmail;
+        }
+        const savedRole = localStorage.getItem("stackly_role");
+        if (savedRole === "user" && typeof currentRole !== "undefined") {
+          currentRole = "user";
+          roleToggle.setAttribute("data-role", "user");
+          roleBtns.forEach(function (b) {
+            const isActive = b.dataset.role === "user";
+            b.classList.toggle("is-active", isActive);
+            b.setAttribute("aria-checked", isActive ? "true" : "false");
+          });
+        }
+      } catch (err) {
+        /* ignore */
+      }
+    </script>
+  </body>
+</html>

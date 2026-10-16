@@ -1,0 +1,4157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#070D1A" />
+    <title>Admin Dashboard — STACKLY</title>
+    <meta
+      name="description"
+      content="STACKLY admin dashboard — clients, portfolios, transactions, reports and analytics."
+    />
+
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2300E5A0'/%3E%3Cpath d='M10 26 L16 14 L22 26' stroke='%2304140E' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --ink-900: #070d1a;
+        --ink-850: #0a1220;
+        --ink-800: #0e1729;
+        --ink-700: #1b2740;
+        --ink-600: #243353;
+        --mint: #00e5a0;
+        --mint-400: #33edb6;
+        --mint-600: #00c489;
+        --mist: #f5f7fb;
+        --muted: #8a94a8;
+        --danger: #ff5c7a;
+        --warn: #ffb84d;
+        --info: #4db8ff;
+        --line: rgba(255, 255, 255, 0.09);
+        --line-2: rgba(255, 255, 255, 0.055);
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --topbar-h: 68px;
+        --sidebar-w: 264px;
+        --radius: 16px;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+      html {
+        overflow-x: clip;
+      }
+      body {
+        overflow-x: clip;
+      }
+      body {
+        margin: 0;
+        background: var(--ink-900);
+        color: var(--mist);
+        font-family: "Inter", system-ui, sans-serif;
+        min-height: 100svh;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+      ::selection {
+        background: var(--mint);
+        color: #04140e;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      img {
+        max-width: 100%;
+      }
+      button {
+        font-family: inherit;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: "Sora", sans-serif;
+        letter-spacing: -0.02em;
+        color: var(--mist);
+        margin: 0;
+      }
+      p {
+        margin: 0;
+      }
+
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 99px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.11);
+      }
+
+      .grain {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        pointer-events: none;
+        opacity: 0.035;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      .grad {
+        background: linear-gradient(
+          100deg,
+          #00e5a0 0%,
+          #33edb6 45%,
+          #7cf7d8 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      /* ================= TOPBAR ================= */
+      .topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--topbar-h);
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0 1rem;
+        background: rgba(7, 13, 26, 0.86);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-bottom: 1px solid var(--line);
+      }
+      @media (min-width: 992px) {
+        .topbar {
+          padding: 0 1.75rem;
+        }
+      }
+
+      .hamburger {
+        width: 40px;
+        height: 40px;
+        border-radius: 11px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition:
+          border-color 0.3s var(--ease),
+          background 0.3s var(--ease);
+      }
+      .hamburger:hover {
+        border-color: rgba(0, 229, 160, 0.42);
+        background: rgba(0, 229, 160, 0.06);
+      }
+      .hamburger span {
+        display: block;
+        width: 16px;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--mist);
+        transition:
+          transform 0.35s var(--ease),
+          opacity 0.25s var(--ease);
+      }
+      .hamburger.is-active span:nth-child(1) {
+        transform: translateY(6px) rotate(45deg);
+      }
+      .hamburger.is-active span:nth-child(2) {
+        opacity: 0;
+      }
+      .hamburger.is-active span:nth-child(3) {
+        transform: translateY(-6px) rotate(-45deg);
+      }
+      @media (min-width: 992px) {
+        .hamburger {
+          display: none;
+        }
+      }
+
+      .topbar-brand {
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+      }
+      .topbar-brand-logo {
+        height: 70px;
+        width: auto;
+        display: block;
+        object-fit: contain;
+      }
+      @media (min-width: 992px) {
+        .topbar-brand-logo {
+          height: 55px;
+        }
+      }
+
+      .topbar-search {
+        flex: 1;
+        max-width: 420px;
+        margin-left: auto;
+        position: relative;
+        display: none;
+      }
+      @media (min-width: 768px) {
+        .topbar-search {
+          display: block;
+        }
+      }
+      .topbar-search svg {
+        position: absolute;
+        left: 0.9rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        pointer-events: none;
+      }
+      .topbar-search input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        padding: 0.65rem 1rem 0.65rem 2.55rem;
+        color: var(--mist);
+        font-size: 0.86rem;
+        font-family: "Inter", sans-serif;
+        color-scheme: dark;
+        transition:
+          border-color 0.3s var(--ease),
+          box-shadow 0.3s var(--ease),
+          background 0.3s var(--ease);
+      }
+      .topbar-search input::placeholder {
+        color: rgba(138, 148, 168, 0.62);
+      }
+      .topbar-search input:focus {
+        outline: none;
+        border-color: rgba(0, 229, 160, 0.5);
+        background: rgba(0, 229, 160, 0.04);
+        box-shadow: 0 0 0 4px rgba(0, 229, 160, 0.11);
+      }
+
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: auto;
+      }
+      @media (min-width: 768px) {
+        .topbar-actions {
+          margin-left: 0.5rem;
+        }
+      }
+
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 11px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        color: rgba(245, 247, 251, 0.78);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        position: relative;
+        transition:
+          border-color 0.3s var(--ease),
+          background 0.3s var(--ease),
+          color 0.3s var(--ease);
+      }
+      .icon-btn:hover {
+        color: var(--mint);
+        border-color: rgba(0, 229, 160, 0.42);
+        background: rgba(0, 229, 160, 0.06);
+      }
+      .icon-btn .badge {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        min-width: 15px;
+        height: 15px;
+        padding: 0 4px;
+        border-radius: 99px;
+        background: var(--danger);
+        color: #fff;
+        font-size: 0.6rem;
+        font-weight: 700;
+        display: grid;
+        place-items: center;
+        border: 2px solid var(--ink-900);
+        line-height: 1;
+      }
+
+      .user-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.35rem 0.75rem 0.35rem 0.35rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        cursor: pointer;
+        transition:
+          border-color 0.3s var(--ease),
+          background 0.3s var(--ease);
+        max-width: 230px;
+      }
+      .user-chip:hover {
+        border-color: rgba(0, 229, 160, 0.4);
+        background: rgba(0, 229, 160, 0.05);
+      }
+      .user-chip .avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--mint) 0%,
+          var(--mint-600) 100%
+        );
+        display: grid;
+        place-items: center;
+        color: #04140e;
+        font-family: "Sora", sans-serif;
+        font-weight: 700;
+        font-size: 0.82rem;
+        flex-shrink: 0;
+      }
+      .user-chip .meta {
+        display: none;
+        flex-direction: column;
+        line-height: 1.15;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      @media (min-width: 576px) {
+        .user-chip .meta {
+          display: flex;
+        }
+      }
+      .user-chip .name {
+        font-family: "Sora", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--mist);
+      }
+      .user-chip .role {
+        font-size: 0.68rem;
+        color: var(--muted);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      /* ================= SIDEBAR ================= */
+      .sidebar {
+        position: fixed;
+        top: var(--topbar-h);
+        left: 0;
+        bottom: 0;
+        width: var(--sidebar-w);
+        z-index: 45;
+        background: linear-gradient(180deg, #0a1220 0%, #070d1a 100%);
+        border-right: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        transform: translateX(-100%);
+        transition: transform 0.42s var(--ease);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+      .sidebar.is-open {
+        transform: translateX(0);
+      }
+      @media (min-width: 992px) {
+        .sidebar {
+          transform: translateX(0);
+        }
+      }
+
+      .sidebar-inner {
+        padding: 1.2rem 0.9rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.4rem;
+        flex: 1;
+      }
+
+      .nav-group-label {
+        font-family: "Sora", sans-serif;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: rgba(138, 148, 168, 0.7);
+        padding: 0 0.75rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .nav-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+      }
+      .nav-item {
+        position: relative;
+      }
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        padding: 0.7rem 0.75rem;
+        border-radius: 11px;
+        color: rgba(245, 247, 251, 0.72);
+        font-size: 0.88rem;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+        width: 100%;
+        text-align: left;
+        font-family: inherit;
+        transition:
+          color 0.25s var(--ease),
+          background 0.25s var(--ease);
+      }
+      .nav-link svg.nav-icon {
+        flex-shrink: 0;
+        color: rgba(138, 148, 168, 0.95);
+        transition: color 0.25s var(--ease);
+      }
+      .nav-link:hover {
+        color: var(--mist);
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .nav-link:hover svg.nav-icon {
+        color: var(--mint);
+      }
+      .nav-link.is-active {
+        color: var(--mist);
+        background: linear-gradient(
+          90deg,
+          rgba(0, 229, 160, 0.14) 0%,
+          rgba(0, 229, 160, 0.04) 100%
+        );
+        box-shadow: inset 0 0 0 1px rgba(0, 229, 160, 0.2);
+      }
+      .nav-link.is-active::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 20%;
+        bottom: 20%;
+        width: 3px;
+        border-radius: 0 3px 3px 0;
+        background: var(--mint);
+      }
+      .nav-link.is-active svg.nav-icon {
+        color: var(--mint);
+      }
+      .nav-link .nav-count {
+        margin-left: auto;
+        padding: 0.1rem 0.5rem;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.06);
+        font-size: 0.68rem;
+        font-weight: 600;
+        color: var(--muted);
+      }
+      .nav-link.is-active .nav-count {
+        background: rgba(0, 229, 160, 0.2);
+        color: var(--mint);
+      }
+
+      .sidebar-card {
+        margin-top: auto;
+        padding: 1.1rem;
+        border-radius: 14px;
+        border: 1px solid rgba(0, 229, 160, 0.24);
+        background:
+          radial-gradient(
+            100% 120% at 100% 0%,
+            rgba(0, 229, 160, 0.16) 0%,
+            transparent 60%
+          ),
+          rgba(0, 229, 160, 0.05);
+        position: relative;
+        overflow: hidden;
+      }
+      .sidebar-card h4 {
+        font-size: 0.9rem;
+        font-weight: 700;
+        margin: 0 0 0.4rem;
+      }
+      .sidebar-card p {
+        font-size: 0.76rem;
+        color: var(--muted);
+        line-height: 1.55;
+        margin: 0 0 0.9rem;
+      }
+      .sidebar-card .btn-up {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.55rem 1rem;
+        border-radius: 99px;
+        background: var(--mint);
+        color: #04140e;
+        font-family: "Sora", sans-serif;
+        font-weight: 700;
+        font-size: 0.75rem;
+        transition: all 0.3s var(--ease);
+        border: none;
+        cursor: pointer;
+      }
+      .sidebar-card .btn-up:hover {
+        background: var(--mint-400);
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px -10px rgba(0, 229, 160, 0.9);
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(4, 8, 16, 0.65);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 44;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.35s var(--ease),
+          visibility 0.35s var(--ease);
+      }
+      .overlay.is-open {
+        opacity: 1;
+        visibility: visible;
+      }
+      @media (min-width: 992px) {
+        .overlay {
+          display: none;
+        }
+      }
+
+      /* ================= MAIN ================= */
+      .app-main {
+        position: relative;
+        margin-top: var(--topbar-h);
+        min-height: calc(100svh - var(--topbar-h));
+        padding: 1.4rem 1rem 3rem;
+        transition: margin-left 0.42s var(--ease);
+        background:
+          radial-gradient(
+            90% 60% at 100% 0%,
+            rgba(0, 229, 160, 0.05) 0%,
+            transparent 55%
+          ),
+          var(--ink-900);
+      }
+      @media (min-width: 992px) {
+        .app-main {
+          margin-left: var(--sidebar-w);
+          padding: 2rem 2rem 3rem;
+        }
+      }
+      @media (min-width: 1200px) {
+        .app-main {
+          padding: 2.25rem 2.5rem 3rem;
+        }
+      }
+
+      /* ================= VIEWS ================= */
+      .view {
+        display: none;
+        animation: viewFade 0.45s var(--ease);
+      }
+      .view.is-active {
+        display: block;
+      }
+      @keyframes viewFade {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .view-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.6rem;
+      }
+      .view-head h1 {
+        font-size: clamp(1.5rem, 3.6vw, 1.9rem);
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        margin: 0 0 0.35rem;
+      }
+      .view-head p {
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+      .view-head .crumb {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.72rem;
+        color: var(--muted);
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        margin-bottom: 0.6rem;
+      }
+      .view-head .crumb svg {
+        color: var(--mint);
+      }
+
+      .view-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.7rem 1.3rem;
+        border-radius: 99px;
+        border: none;
+        background: var(--mint);
+        color: #04140e;
+        font-family: "Sora", sans-serif;
+        font-weight: 700;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition:
+          transform 0.3s var(--ease),
+          box-shadow 0.3s var(--ease),
+          background 0.3s var(--ease);
+        box-shadow: 0 12px 30px -14px rgba(0, 229, 160, 0.85);
+        white-space: nowrap;
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        background: var(--mint-400);
+        box-shadow: 0 18px 40px -14px rgba(0, 229, 160, 1);
+      }
+      .btn-primary svg {
+        transition: transform 0.3s var(--ease);
+      }
+      .btn-primary:hover svg {
+        transform: translateX(3px);
+      }
+
+      .btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.7rem 1.3rem;
+        border-radius: 99px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        color: rgba(245, 247, 251, 0.86);
+        font-family: "Sora", sans-serif;
+        font-weight: 600;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: all 0.3s var(--ease);
+        white-space: nowrap;
+      }
+      .btn-ghost:hover {
+        border-color: rgba(0, 229, 160, 0.4);
+        background: rgba(0, 229, 160, 0.06);
+        color: var(--mint);
+      }
+      .btn-ghost svg {
+        color: var(--mint);
+      }
+
+      /* ================= CARDS ================= */
+      .card {
+        background: linear-gradient(
+          155deg,
+          rgba(255, 255, 255, 0.045),
+          rgba(255, 255, 255, 0.012)
+        );
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 1.25rem;
+        position: relative;
+      }
+      @media (min-width: 768px) {
+        .card {
+          padding: 1.5rem;
+        }
+      }
+      .card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 1.1rem;
+      }
+      .card-head h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: -0.015em;
+        margin: 0;
+      }
+      .card-head .sub {
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-top: 0.2rem;
+        display: block;
+      }
+      .card-head .link {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--mint);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        transition: gap 0.3s var(--ease);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        font-family: inherit;
+      }
+      .card-head .link:hover {
+        gap: 0.5rem;
+      }
+
+      /* ================= KPI CARDS ================= */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1.4rem;
+      }
+      @media (min-width: 576px) {
+        .kpi-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 1200px) {
+        .kpi-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .kpi-card {
+        position: relative;
+        padding: 1.25rem 1.2rem;
+        border-radius: var(--radius);
+        border: 1px solid var(--line);
+        background: linear-gradient(
+          155deg,
+          rgba(255, 255, 255, 0.05),
+          rgba(255, 255, 255, 0.012)
+        );
+        overflow: hidden;
+        transition:
+          transform 0.4s var(--ease),
+          border-color 0.4s var(--ease);
+      }
+      .kpi-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(0, 229, 160, 0.3);
+      }
+      .kpi-card::after {
+        content: "";
+        position: absolute;
+        top: -70px;
+        right: -70px;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(0, 229, 160, 0.11),
+          transparent 68%
+        );
+        filter: blur(24px);
+        pointer-events: none;
+      }
+      .kpi-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.9rem;
+        position: relative;
+        z-index: 2;
+      }
+      .kpi-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: rgba(0, 229, 160, 0.11);
+        border: 1px solid rgba(0, 229, 160, 0.22);
+        color: var(--mint);
+      }
+      .kpi-trend {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.22rem 0.55rem;
+        border-radius: 99px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+      .kpi-trend.up {
+        background: rgba(0, 229, 160, 0.13);
+        color: var(--mint);
+      }
+      .kpi-trend.down {
+        background: rgba(255, 92, 122, 0.13);
+        color: #ff8ca1;
+      }
+      .kpi-trend.flat {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--muted);
+      }
+      .kpi-value {
+        font-family: "Sora", sans-serif;
+        font-size: 1.75rem;
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        margin: 0 0 0.4rem;
+        position: relative;
+        z-index: 2;
+      }
+      .kpi-label {
+        font-size: 0.76rem;
+        color: var(--muted);
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        position: relative;
+        z-index: 2;
+        margin: 0;
+      }
+
+      /* ================= CHARTS ================= */
+      .charts-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1.4rem;
+      }
+      @media (min-width: 992px) {
+        .charts-grid {
+          grid-template-columns: 2fr 1fr;
+        }
+      }
+
+      .chart-canvas-wrap {
+        position: relative;
+        height: 280px;
+      }
+      @media (min-width: 992px) {
+        .chart-canvas-wrap {
+          height: 300px;
+        }
+      }
+      .chart-canvas-wrap canvas {
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      .donut-legend {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        margin-top: 1rem;
+      }
+      .donut-legend li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.82rem;
+        color: rgba(245, 247, 251, 0.84);
+      }
+      .donut-legend .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 3px;
+        display: inline-block;
+        margin-right: 0.55rem;
+        vertical-align: middle;
+      }
+      .donut-legend .val {
+        font-weight: 700;
+        font-family: "Sora", sans-serif;
+        font-size: 0.85rem;
+      }
+
+      /* ================= TWO COLUMN ================= */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1.4rem;
+      }
+      @media (min-width: 992px) {
+        .two-col {
+          grid-template-columns: 1.55fr 1fr;
+        }
+      }
+
+      /* ================= TABLE ================= */
+      .table-wrap {
+        overflow-x: auto;
+        margin: 0 -1.25rem;
+        padding: 0 1.25rem;
+      }
+      @media (min-width: 768px) {
+        .table-wrap {
+          margin: 0 -1.5rem;
+          padding: 0 1.5rem;
+        }
+      }
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+      }
+      .data-table thead th {
+        text-align: left;
+        font-family: "Sora", sans-serif;
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: rgba(138, 148, 168, 0.9);
+        padding: 0.5rem 0.75rem 0.9rem;
+        border-bottom: 1px solid var(--line);
+        white-space: nowrap;
+      }
+      .data-table tbody tr {
+        transition: background 0.25s var(--ease);
+      }
+      .data-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .data-table tbody td {
+        padding: 0.95rem 0.75rem;
+        border-bottom: 1px solid var(--line-2);
+        color: rgba(245, 247, 251, 0.86);
+        vertical-align: middle;
+      }
+      .data-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .cell-client {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        min-width: 190px;
+      }
+      .cell-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #243353 0%, #1b2740 100%);
+        color: var(--mint);
+        font-family: "Sora", sans-serif;
+        font-weight: 700;
+        font-size: 0.75rem;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        border: 1px solid rgba(0, 229, 160, 0.22);
+      }
+      .cell-client .info p {
+        font-weight: 600;
+        font-size: 0.86rem;
+        color: var(--mist);
+        margin: 0 0 0.1rem;
+      }
+      .cell-client .info span {
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.65rem;
+        border-radius: 99px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+      }
+      .badge.success {
+        background: rgba(0, 229, 160, 0.13);
+        color: var(--mint);
+      }
+      .badge.warn {
+        background: rgba(255, 184, 77, 0.15);
+        color: var(--warn);
+      }
+      .badge.danger {
+        background: rgba(255, 92, 122, 0.14);
+        color: #ff8ca1;
+      }
+      .badge.info {
+        background: rgba(77, 184, 255, 0.14);
+        color: var(--info);
+      }
+      .badge.neutral {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(245, 247, 251, 0.82);
+      }
+      .badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .cell-amount {
+        font-family: "Sora", sans-serif;
+        font-weight: 700;
+        color: var(--mist);
+        white-space: nowrap;
+      }
+      .cell-amount.pos {
+        color: var(--mint);
+      }
+      .cell-amount.neg {
+        color: #ff8ca1;
+      }
+
+      /* ================= ACTIVITY FEED ================= */
+      .activity {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .activity li {
+        display: flex;
+        gap: 0.85rem;
+        padding: 0.85rem 0;
+        border-bottom: 1px solid var(--line-2);
+        position: relative;
+      }
+      .activity li:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .activity li:first-child {
+        padding-top: 0;
+      }
+      .activity .a-icon {
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        display: grid;
+        place-items: center;
+        background: rgba(0, 229, 160, 0.1);
+        border: 1px solid rgba(0, 229, 160, 0.2);
+        color: var(--mint);
+      }
+      .activity .a-icon.blue {
+        background: rgba(77, 184, 255, 0.1);
+        border-color: rgba(77, 184, 255, 0.22);
+        color: var(--info);
+      }
+      .activity .a-icon.warn {
+        background: rgba(255, 184, 77, 0.1);
+        border-color: rgba(255, 184, 77, 0.22);
+        color: var(--warn);
+      }
+      .activity .a-icon.red {
+        background: rgba(255, 92, 122, 0.1);
+        border-color: rgba(255, 92, 122, 0.22);
+        color: #ff8ca1;
+      }
+      .activity .a-body {
+        flex: 1;
+        min-width: 0;
+      }
+      .activity .a-title {
+        font-size: 0.86rem;
+        color: rgba(245, 247, 251, 0.9);
+        line-height: 1.5;
+        margin: 0 0 0.15rem;
+      }
+      .activity .a-title strong {
+        color: var(--mist);
+        font-weight: 600;
+      }
+      .activity .a-time {
+        font-size: 0.72rem;
+        color: var(--muted);
+      }
+
+      /* ================= QUICK ACTIONS ================= */
+      .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.7rem;
+      }
+      .qa-btn {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.025);
+        color: rgba(245, 247, 251, 0.86);
+        cursor: pointer;
+        text-align: left;
+        font-family: inherit;
+        transition: all 0.35s var(--ease);
+      }
+      .qa-btn:hover {
+        border-color: rgba(0, 229, 160, 0.35);
+        background: rgba(0, 229, 160, 0.05);
+        transform: translateY(-2px);
+        color: var(--mint);
+      }
+      .qa-btn svg {
+        color: var(--mint);
+      }
+      .qa-btn span {
+        font-family: "Sora", sans-serif;
+        font-weight: 600;
+        font-size: 0.82rem;
+      }
+
+      /* ================= GOAL BAR ================= */
+      .goal {
+        margin-bottom: 1.15rem;
+      }
+      .goal:last-child {
+        margin-bottom: 0;
+      }
+      .goal-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.55rem;
+        font-size: 0.82rem;
+      }
+      .goal-head .label {
+        color: rgba(245, 247, 251, 0.86);
+        font-weight: 500;
+      }
+      .goal-head .value {
+        font-family: "Sora", sans-serif;
+        font-weight: 700;
+        color: var(--mint);
+      }
+      .goal-bar {
+        height: 6px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.06);
+        overflow: hidden;
+      }
+      .goal-fill {
+        height: 100%;
+        border-radius: 99px;
+        background: linear-gradient(
+          90deg,
+          var(--mint) 0%,
+          var(--mint-400) 100%
+        );
+        box-shadow: 0 0 12px rgba(0, 229, 160, 0.5);
+        width: 0;
+        transition: width 1.2s var(--ease);
+      }
+
+      /* ================= SETTINGS FORM ================= */
+      .settings-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1.1rem;
+      }
+      @media (min-width: 768px) {
+        .settings-row {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+        min-width: 0; /* prevents overlap in grid */
+      }
+      .field label {
+        font-family: "Sora", sans-serif;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .field label .req {
+        color: var(--danger);
+        margin-left: 0.15rem;
+      }
+      .field input,
+      .field select,
+      .field textarea {
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        padding: 0.85rem 1rem;
+        color: var(--mist);
+        font-size: 0.88rem;
+        font-family: inherit;
+        color-scheme: dark;
+        transition:
+          border-color 0.3s var(--ease),
+          box-shadow 0.3s var(--ease),
+          background 0.3s var(--ease);
+      }
+      .field textarea {
+        resize: vertical;
+        min-height: 88px;
+        line-height: 1.6;
+      }
+      .field select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238A94A8' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 15px;
+        padding-right: 2.6rem;
+        cursor: pointer;
+      }
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
+        outline: none;
+        border-color: rgba(0, 229, 160, 0.55);
+        background: rgba(0, 229, 160, 0.04);
+        box-shadow: 0 0 0 4px rgba(0, 229, 160, 0.11);
+      }
+
+      /* Invalid state */
+      .field input.is-invalid,
+      .field select.is-invalid,
+      .field textarea.is-invalid {
+        border-color: var(--danger);
+        background: rgba(255, 92, 122, 0.055);
+        box-shadow: 0 0 0 4px rgba(255, 92, 122, 0.11);
+      }
+
+      .field-err {
+        display: none;
+        margin: 0;
+        font-size: 0.76rem;
+        font-weight: 500;
+        color: #ff8ca1;
+        align-items: center;
+        gap: 0.35rem;
+        line-height: 1.5;
+      }
+      .field-err.show {
+        display: flex;
+      }
+      .field-err svg {
+        flex-shrink: 0;
+      }
+
+      /* ================= TOGGLE ================= */
+      .switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        cursor: pointer;
+        user-select: none;
+        flex-shrink: 0;
+      }
+      .switch input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+      }
+      .switch .track {
+        width: 42px;
+        height: 24px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--line);
+        position: relative;
+        flex-shrink: 0;
+        transition: all 0.3s var(--ease);
+      }
+      .switch .track::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: rgba(245, 247, 251, 0.7);
+        transition: all 0.3s var(--ease);
+      }
+      .switch input:checked ~ .track {
+        background: var(--mint);
+        border-color: var(--mint);
+      }
+      .switch input:checked ~ .track::after {
+        transform: translateX(18px);
+        background: #04140e;
+      }
+
+      .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.1rem 0;
+        border-bottom: 1px solid var(--line-2);
+      }
+      .setting-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .setting-item:first-child {
+        padding-top: 0;
+      }
+      .setting-item .info {
+        min-width: 0;
+      }
+      .setting-item .info p {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin: 0 0 0.2rem;
+        color: var(--mist);
+      }
+      .setting-item .info span {
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.001ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.001ms !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- ================= TOPBAR ================= -->
+    <header class="topbar">
+      <button
+        class="hamburger"
+        id="hamburger"
+        type="button"
+        aria-label="Toggle navigation"
+        aria-expanded="false"
+        aria-controls="sidebar"
+      >
+        <span></span><span></span><span></span>
+      </button>
+
+      <!-- Logo — ONLY element that does NOT redirect to 404 -->
+      <a href="admin.html" class="topbar-brand" aria-label="STACKLY home">
+        <img
+          id="brandLogo"
+          class="topbar-brand-logo"
+          src="./assets/logo.webp"
+          alt="STACKLY"
+        />
+      </a>
+
+      <div class="topbar-search">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+        <input
+          type="search"
+          placeholder="Search clients, portfolios, transactions…"
+          aria-label="Search"
+        />
+      </div>
+
+      <div class="topbar-actions">
+        <button
+          class="icon-btn go-404"
+          type="button"
+          aria-label="Notifications"
+        >
+          <svg
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+          </svg>
+          <span class="badge">3</span>
+        </button>
+
+        <button class="icon-btn go-404" type="button" aria-label="Settings">
+          <svg
+            width="17"
+            height="17"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="3" />
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"
+            />
+          </svg>
+        </button>
+
+        <button
+          class="user-chip go-404"
+          type="button"
+          aria-label="Account menu"
+        >
+          <span class="avatar" id="userAvatar">A</span>
+          <span class="meta">
+            <span class="name" id="userName">Admin</span>
+            <span class="role">Administrator</span>
+          </span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <div class="sidebar-inner">
+        <div>
+          <p class="nav-group-label">Overview</p>
+          <ul class="nav-list">
+            <li class="nav-item">
+              <button
+                class="nav-link is-active"
+                data-view="dashboard"
+                type="button"
+              >
+                <svg
+                  class="nav-icon"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="3" y="3" width="7" height="9" rx="1.5" />
+                  <rect x="14" y="3" width="7" height="5" rx="1.5" />
+                  <rect x="14" y="12" width="7" height="9" rx="1.5" />
+                  <rect x="3" y="16" width="7" height="5" rx="1.5" />
+                </svg>
+                Dashboard
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" data-view="analytics" type="button">
+                <svg
+                  class="nav-icon"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 3v18h18" />
+                  <path d="m19 9-5 5-4-4-5 5" />
+                </svg>
+                Analytics
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <p class="nav-group-label">Management</p>
+          <ul class="nav-list">
+            <li class="nav-item">
+              <button class="nav-link" data-view="clients" type="button">
+                <svg
+                  class="nav-icon"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path
+                    d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
+                  />
+                </svg>
+                Clients
+                <span class="nav-count">142</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" data-view="portfolios" type="button">
+                <svg
+                  class="nav-icon"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="2" y="6" width="20" height="14" rx="2" />
+                  <path d="M2 10h20" />
+                  <path d="M6 15h4" />
+                </svg>
+                Portfolios
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" data-view="transactions" type="button">
+                <svg
+                  class="nav-icon"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="3 17 9 11 13 15 21 7" />
+                  <polyline points="15 7 21 7 21 13" />
+                </svg>
+                Transactions
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" data-view="team" type="button">
+                <svg
+                  class="nav-icon"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                Team
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <p class="nav-group-label">Reports</p>
+          <ul class="nav-list">
+            <li class="nav-item">
+              <button class="nav-link" data-view="reports" type="button">
+                <svg
+                  class="nav-icon"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M4 4h16v16H4z" />
+                  <path d="M8 8h8M8 12h8M8 16h5" />
+                </svg>
+                All Reports
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" data-view="compliance" type="button">
+                <svg
+                  class="nav-icon"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12 2 4 6v6c0 5 3.4 8.8 8 10 4.6-1.2 8-5 8-10V6l-8-4Z"
+                  />
+                  <polyline points="9 12 11 14 15 10" />
+                </svg>
+                Compliance
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <p class="nav-group-label">System</p>
+          <ul class="nav-list">
+            <li class="nav-item">
+              <button class="nav-link" data-view="settings" type="button">
+                <svg
+                  class="nav-icon"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="3" />
+                  <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"
+                  />
+                </svg>
+                Settings
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link go-404" type="button">
+                <svg
+                  class="nav-icon"
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Log out
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="sidebar-card">
+          <h4>Enterprise tier</h4>
+          <p>
+            Unlock multi-entity reporting, custom KPIs and dedicated coverage.
+          </p>
+          <button class="btn-up go-404" type="button">
+            Upgrade
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- ================= MAIN ================= -->
+    <main class="app-main">
+      <!-- DASHBOARD -->
+      <section class="view is-active" data-view="dashboard">
+        <header class="view-head">
+          <div>
+            <span class="crumb">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="7" height="9" rx="1.5" />
+                <rect x="14" y="3" width="7" height="5" rx="1.5" />
+              </svg>
+              Overview
+            </span>
+            <h1>Welcome back, <span id="dashName">Admin</span>.</h1>
+            <p>
+              Here's a snapshot of the practice for
+              <span id="dashDate">today</span>.
+            </p>
+          </div>
+          <div class="view-actions">
+            <button class="btn-ghost go-404" type="button">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Export
+            </button>
+            <button class="btn-primary go-404" type="button">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              New Mandate
+            </button>
+          </div>
+        </header>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <div class="kpi-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                  />
+                </svg>
+              </div>
+              <span class="kpi-trend up">
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 15 12 9 18 15" />
+                </svg>
+                12.4%
+              </span>
+            </div>
+            <p class="kpi-value">$342.8B</p>
+            <p class="kpi-label">Assets under advisory</p>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <div class="kpi-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                </svg>
+              </div>
+              <span class="kpi-trend up">
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 15 12 9 18 15" />
+                </svg>
+                8
+              </span>
+            </div>
+            <p class="kpi-value">142</p>
+            <p class="kpi-label">Active clients</p>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <div class="kpi-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="3 17 9 11 13 15 21 7" />
+                  <polyline points="15 7 21 7 21 13" />
+                </svg>
+              </div>
+              <span class="kpi-trend down">
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+                2.1%
+              </span>
+            </div>
+            <p class="kpi-value">$4.21M</p>
+            <p class="kpi-label">Settled this week</p>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <div class="kpi-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+              </div>
+              <span class="kpi-trend flat">Stable</span>
+            </div>
+            <p class="kpi-value">18</p>
+            <p class="kpi-label">Open mandates</p>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Assets under advisory</h3>
+                <span class="sub">Rolling 12 months</span>
+              </div>
+              <button class="link go-404" type="button">
+                Full report
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </button>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="revenueChart"></canvas>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Asset allocation</h3>
+                <span class="sub">By class</span>
+              </div>
+            </div>
+            <div class="chart-canvas-wrap" style="height: 200px">
+              <canvas id="allocationChart"></canvas>
+            </div>
+            <ul class="donut-legend">
+              <li>
+                <span
+                  ><span class="dot" style="background: #00e5a0"></span
+                  >Equities</span
+                ><span class="val">42%</span>
+              </li>
+              <li>
+                <span
+                  ><span class="dot" style="background: #4db8ff"></span>Fixed
+                  income</span
+                ><span class="val">31%</span>
+              </li>
+              <li>
+                <span
+                  ><span class="dot" style="background: #ffb84d"></span
+                  >Alternatives</span
+                ><span class="val">18%</span>
+              </li>
+              <li>
+                <span
+                  ><span class="dot" style="background: #8a94a8"></span
+                  >Cash</span
+                ><span class="val">9%</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Recent transactions</h3>
+                <span class="sub">Latest settled mandates</span>
+              </div>
+              <button class="link go-404" type="button">
+                View all
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </button>
+            </div>
+
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Client</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="cell-client">
+                        <span class="cell-avatar">NK</span>
+                        <div class="info">
+                          <p>Northbridge Capital</p>
+                          <span>London, UK</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>Debt issuance</td>
+                    <td class="cell-amount pos">+$48.2M</td>
+                    <td><span class="badge success">Settled</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="cell-client">
+                        <span class="cell-avatar">AV</span>
+                        <div class="info">
+                          <p>Avon Pension Trust</p>
+                          <span>Edinburgh, UK</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>Portfolio review</td>
+                    <td class="cell-amount pos">+$12.4M</td>
+                    <td><span class="badge info">In review</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="cell-client">
+                        <span class="cell-avatar">SL</span>
+                        <div class="info">
+                          <p>Solstice Life</p>
+                          <span>Zurich, CH</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>ALM strategy</td>
+                    <td class="cell-amount pos">+$89.6M</td>
+                    <td><span class="badge success">Settled</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="cell-client">
+                        <span class="cell-avatar">MC</span>
+                        <div class="info">
+                          <p>Meridian Corp Treasury</p>
+                          <span>New York, US</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>FX hedging</td>
+                    <td class="cell-amount neg">−$3.2M</td>
+                    <td><span class="badge warn">Pending</span></td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="cell-client">
+                        <span class="cell-avatar">HF</span>
+                        <div class="info">
+                          <p>Harbor Family Office</p>
+                          <span>Singapore</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td>Structuring</td>
+                    <td class="cell-amount pos">+$24.1M</td>
+                    <td><span class="badge success">Settled</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Activity</h3>
+                <span class="sub">Last 24 hours</span>
+              </div>
+            </div>
+
+            <ul class="activity">
+              <li>
+                <span class="a-icon"
+                  ><svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg
+                ></span>
+                <div class="a-body">
+                  <p class="a-title">
+                    <strong>Northbridge Capital</strong> mandate moved to
+                    settlement.
+                  </p>
+                  <span class="a-time">12 minutes ago</span>
+                </div>
+              </li>
+              <li>
+                <span class="a-icon blue"
+                  ><svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 16v-4M12 8h.01" /></svg
+                ></span>
+                <div class="a-body">
+                  <p class="a-title">
+                    Compliance review requested for
+                    <strong>Solstice Life</strong>.
+                  </p>
+                  <span class="a-time">1 hour ago</span>
+                </div>
+              </li>
+              <li>
+                <span class="a-icon warn"
+                  ><svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"
+                    />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" /></svg
+                ></span>
+                <div class="a-body">
+                  <p class="a-title">
+                    Model validation flagged for
+                    <strong>Meridian FX book</strong>.
+                  </p>
+                  <span class="a-time">3 hours ago</span>
+                </div>
+              </li>
+              <li>
+                <span class="a-icon"
+                  ><svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" /></svg
+                ></span>
+                <div class="a-body">
+                  <p class="a-title">
+                    New analyst <strong>R. Mehta</strong> joined the capital
+                    markets desk.
+                  </p>
+                  <span class="a-time">5 hours ago</span>
+                </div>
+              </li>
+              <li>
+                <span class="a-icon red"
+                  ><svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" /></svg
+                ></span>
+                <div class="a-body">
+                  <p class="a-title">
+                    <strong>Harbor Family Office</strong> requested a governance
+                    workshop.
+                  </p>
+                  <span class="a-time">Yesterday</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Quarterly goals</h3>
+                <span class="sub">Progress toward Q3 targets</span>
+              </div>
+            </div>
+
+            <div class="goal">
+              <div class="goal-head">
+                <span class="label">New mandates closed</span>
+                <span class="value">14 / 18</span>
+              </div>
+              <div class="goal-bar">
+                <div class="goal-fill" data-fill="78"></div>
+              </div>
+            </div>
+            <div class="goal">
+              <div class="goal-head">
+                <span class="label">Advisory revenue</span>
+                <span class="value">$18.4M / $22M</span>
+              </div>
+              <div class="goal-bar">
+                <div class="goal-fill" data-fill="84"></div>
+              </div>
+            </div>
+            <div class="goal">
+              <div class="goal-head">
+                <span class="label">Client retention</span>
+                <span class="value">96% / 98%</span>
+              </div>
+              <div class="goal-bar">
+                <div class="goal-fill" data-fill="98"></div>
+              </div>
+            </div>
+            <div class="goal">
+              <div class="goal-head">
+                <span class="label">Regulatory readiness</span>
+                <span class="value">12 / 12</span>
+              </div>
+              <div class="goal-bar">
+                <div class="goal-fill" data-fill="100"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Quick actions</h3>
+                <span class="sub">Frequent operations</span>
+              </div>
+            </div>
+            <div class="quick-actions">
+              <button class="qa-btn go-404" type="button">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                <span>New client</span>
+              </button>
+              <button class="qa-btn go-404" type="button">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M4 4h16v16H4z" />
+                  <path d="M8 8h8M8 12h8M8 16h5" />
+                </svg>
+                <span>New report</span>
+              </button>
+              <button class="qa-btn go-404" type="button">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="3 17 9 11 13 15 21 7" />
+                  <polyline points="15 7 21 7 21 13" />
+                </svg>
+                <span>Record transaction</span>
+              </button>
+              <button class="qa-btn go-404" type="button">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M12 8v8M8 12h8" />
+                </svg>
+                <span>Schedule review</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANALYTICS -->
+      <section class="view" data-view="analytics">
+        <header class="view-head">
+          <div>
+            <span class="crumb">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 3v18h18" />
+                <path d="m19 9-5 5-4-4-5 5" />
+              </svg>
+              Analytics
+            </span>
+            <h1>Practice analytics</h1>
+            <p>Revenue, growth and mandate performance across the firm.</p>
+          </div>
+          <div class="view-actions">
+            <button class="btn-ghost go-404" type="button">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Export
+            </button>
+          </div>
+        </header>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <div class="kpi-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 3v18h18" />
+                  <path d="m19 9-5 5-4-4-5 5" />
+                </svg>
+              </div>
+              <span class="kpi-trend up"
+                ><svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 15 12 9 18 15" /></svg
+                >18.2%</span
+              >
+            </div>
+            <p class="kpi-value">$18.4M</p>
+            <p class="kpi-label">Advisory revenue YTD</p>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <div class="kpi-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 6v6l4 2" />
+                </svg>
+              </div>
+              <span class="kpi-trend up"
+                ><svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 15 12 9 18 15" /></svg
+                >4.1%</span
+              >
+            </div>
+            <p class="kpi-value">+14.2%</p>
+            <p class="kpi-label">Avg. mandate ROI</p>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <div class="kpi-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12 2 4 6v6c0 5 3.4 8.8 8 10 4.6-1.2 8-5 8-10V6l-8-4Z"
+                  />
+                </svg>
+              </div>
+              <span class="kpi-trend up"
+                ><svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 15 12 9 18 15" /></svg
+                >1.2</span
+              >
+            </div>
+            <p class="kpi-value">98.4%</p>
+            <p class="kpi-label">Client retention</p>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-top">
+              <div class="kpi-icon">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                </svg>
+              </div>
+              <span class="kpi-trend up"
+                ><svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="6 15 12 9 18 15" /></svg
+                >22</span
+              >
+            </div>
+            <p class="kpi-value">480</p>
+            <p class="kpi-label">Specialists</p>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Revenue by practice</h3>
+                <span class="sub">Year to date</span>
+              </div>
+            </div>
+            <div class="chart-canvas-wrap">
+              <canvas id="analyticsChart"></canvas>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Practice mix</h3>
+                <span class="sub">Revenue share</span>
+              </div>
+            </div>
+            <div class="chart-canvas-wrap" style="height: 200px">
+              <canvas id="analyticsDonut"></canvas>
+            </div>
+            <ul class="donut-legend">
+              <li>
+                <span
+                  ><span class="dot" style="background: #00e5a0"></span>Capital
+                  markets</span
+                ><span class="val">38%</span>
+              </li>
+              <li>
+                <span
+                  ><span class="dot" style="background: #4db8ff"></span
+                  >Portfolio strategy</span
+                ><span class="val">27%</span>
+              </li>
+              <li>
+                <span
+                  ><span class="dot" style="background: #ffb84d"></span>Risk
+                  &amp; regulatory</span
+                ><span class="val">19%</span>
+              </li>
+              <li>
+                <span
+                  ><span class="dot" style="background: #8a94a8"></span
+                  >Treasury</span
+                ><span class="val">16%</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLIENTS -->
+      <section class="view" data-view="clients">
+        <header class="view-head">
+          <div>
+            <span class="crumb">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+              </svg>
+              Clients
+            </span>
+            <h1>Client roster</h1>
+            <p>142 active institutional relationships across 47 markets.</p>
+          </div>
+          <div class="view-actions">
+            <button class="btn-primary go-404" type="button">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Add client
+            </button>
+          </div>
+        </header>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>All clients</h3>
+              <span class="sub">Sorted by most recent engagement</span>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Client</th>
+                  <th>Segment</th>
+                  <th>AUM</th>
+                  <th>Relationship</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="cell-client">
+                      <span class="cell-avatar">NK</span>
+                      <div class="info">
+                        <p>Northbridge Capital</p>
+                        <span>London, UK</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Asset manager</td>
+                  <td class="cell-amount">$42.1B</td>
+                  <td>9 years</td>
+                  <td><span class="badge success">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-client">
+                      <span class="cell-avatar">AV</span>
+                      <div class="info">
+                        <p>Avon Pension Trust</p>
+                        <span>Edinburgh, UK</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Pension fund</td>
+                  <td class="cell-amount">$28.4B</td>
+                  <td>6 years</td>
+                  <td><span class="badge success">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-client">
+                      <span class="cell-avatar">SL</span>
+                      <div class="info">
+                        <p>Solstice Life</p>
+                        <span>Zurich, CH</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Insurance</td>
+                  <td class="cell-amount">$67.3B</td>
+                  <td>11 years</td>
+                  <td><span class="badge success">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-client">
+                      <span class="cell-avatar">MC</span>
+                      <div class="info">
+                        <p>Meridian Corp Treasury</p>
+                        <span>New York, US</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Corporate treasury</td>
+                  <td class="cell-amount">$14.8B</td>
+                  <td>3 years</td>
+                  <td><span class="badge warn">Review</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-client">
+                      <span class="cell-avatar">HF</span>
+                      <div class="info">
+                        <p>Harbor Family Office</p>
+                        <span>Singapore</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Family office</td>
+                  <td class="cell-amount">$8.9B</td>
+                  <td>5 years</td>
+                  <td><span class="badge success">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-client">
+                      <span class="cell-avatar">PS</span>
+                      <div class="info">
+                        <p>Pacific Sovereign Fund</p>
+                        <span>Wellington, NZ</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Sovereign</td>
+                  <td class="cell-amount">$82.5B</td>
+                  <td>8 years</td>
+                  <td><span class="badge success">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-client">
+                      <span class="cell-avatar">AL</span>
+                      <div class="info">
+                        <p>Arcadia Life</p>
+                        <span>Toronto, CA</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Insurance</td>
+                  <td class="cell-amount">$21.2B</td>
+                  <td>4 years</td>
+                  <td><span class="badge info">Onboarding</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- PORTFOLIOS -->
+      <section class="view" data-view="portfolios">
+        <header class="view-head">
+          <div>
+            <span class="crumb">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="6" width="20" height="14" rx="2" />
+                <path d="M2 10h20" />
+              </svg>
+              Portfolios
+            </span>
+            <h1>Portfolio oversight</h1>
+            <p>Track allocation, performance and risk across every mandate.</p>
+          </div>
+        </header>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Top portfolios</h3>
+              <span class="sub">By assets under advisory</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Portfolio</th>
+                  <th>Client</th>
+                  <th>Strategy</th>
+                  <th>AUM</th>
+                  <th>YTD</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>PS-01 Global Balanced</strong></td>
+                  <td>Pacific Sovereign Fund</td>
+                  <td>Multi-asset</td>
+                  <td class="cell-amount">$34.2B</td>
+                  <td class="cell-amount pos">+13.4%</td>
+                  <td><span class="badge success">Performing</span></td>
+                </tr>
+                <tr>
+                  <td><strong>SL-04 ALM Core</strong></td>
+                  <td>Solstice Life</td>
+                  <td>LDI</td>
+                  <td class="cell-amount">$28.7B</td>
+                  <td class="cell-amount pos">+9.8%</td>
+                  <td><span class="badge success">Performing</span></td>
+                </tr>
+                <tr>
+                  <td><strong>NK-02 Credit Opps</strong></td>
+                  <td>Northbridge Capital</td>
+                  <td>Fixed income</td>
+                  <td class="cell-amount">$19.4B</td>
+                  <td class="cell-amount pos">+7.2%</td>
+                  <td><span class="badge success">Performing</span></td>
+                </tr>
+                <tr>
+                  <td><strong>AV-03 Growth</strong></td>
+                  <td>Avon Pension Trust</td>
+                  <td>Equity tilt</td>
+                  <td class="cell-amount">$14.1B</td>
+                  <td class="cell-amount pos">+16.1%</td>
+                  <td><span class="badge success">Performing</span></td>
+                </tr>
+                <tr>
+                  <td><strong>MC-01 Treasury Reserves</strong></td>
+                  <td>Meridian Corp Treasury</td>
+                  <td>Cash</td>
+                  <td class="cell-amount">$8.4B</td>
+                  <td class="cell-amount">+1.4%</td>
+                  <td><span class="badge warn">Review</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TRANSACTIONS -->
+      <section class="view" data-view="transactions">
+        <header class="view-head">
+          <div>
+            <span class="crumb">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="3 17 9 11 13 15 21 7" />
+                <polyline points="15 7 21 7 21 13" />
+              </svg>
+              Transactions
+            </span>
+            <h1>Transaction ledger</h1>
+            <p>Every settlement, transfer and mandate across the firm.</p>
+          </div>
+          <div class="view-actions">
+            <button class="btn-ghost go-404" type="button">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Export CSV
+            </button>
+            <button class="btn-primary go-404" type="button">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Record
+            </button>
+          </div>
+        </header>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Client</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>TX-4821</strong></td>
+                  <td>Northbridge Capital</td>
+                  <td>Debt issuance</td>
+                  <td class="cell-amount pos">+$48.2M</td>
+                  <td>Oct 16, 2026</td>
+                  <td><span class="badge success">Settled</span></td>
+                </tr>
+                <tr>
+                  <td><strong>TX-4820</strong></td>
+                  <td>Solstice Life</td>
+                  <td>ALM rebalance</td>
+                  <td class="cell-amount pos">+$89.6M</td>
+                  <td>Oct 15, 2026</td>
+                  <td><span class="badge success">Settled</span></td>
+                </tr>
+                <tr>
+                  <td><strong>TX-4819</strong></td>
+                  <td>Avon Pension Trust</td>
+                  <td>Portfolio review</td>
+                  <td class="cell-amount pos">+$12.4M</td>
+                  <td>Oct 15, 2026</td>
+                  <td><span class="badge info">In review</span></td>
+                </tr>
+                <tr>
+                  <td><strong>TX-4818</strong></td>
+                  <td>Meridian Corp Treasury</td>
+                  <td>FX hedge</td>
+                  <td class="cell-amount neg">−$3.2M</td>
+                  <td>Oct 14, 2026</td>
+                  <td><span class="badge warn">Pending</span></td>
+                </tr>
+                <tr>
+                  <td><strong>TX-4817</strong></td>
+                  <td>Harbor Family Office</td>
+                  <td>Structuring</td>
+                  <td class="cell-amount pos">+$24.1M</td>
+                  <td>Oct 14, 2026</td>
+                  <td><span class="badge success">Settled</span></td>
+                </tr>
+                <tr>
+                  <td><strong>TX-4816</strong></td>
+                  <td>Pacific Sovereign Fund</td>
+                  <td>Equity placement</td>
+                  <td class="cell-amount pos">+$156.8M</td>
+                  <td>Oct 13, 2026</td>
+                  <td><span class="badge success">Settled</span></td>
+                </tr>
+                <tr>
+                  <td><strong>TX-4815</strong></td>
+                  <td>Arcadia Life</td>
+                  <td>Onboarding transfer</td>
+                  <td class="cell-amount pos">+$41.2M</td>
+                  <td>Oct 12, 2026</td>
+                  <td><span class="badge info">Processing</span></td>
+                </tr>
+                <tr>
+                  <td><strong>TX-4814</strong></td>
+                  <td>Northbridge Capital</td>
+                  <td>Credit facility</td>
+                  <td class="cell-amount pos">+$72.5M</td>
+                  <td>Oct 11, 2026</td>
+                  <td><span class="badge success">Settled</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TEAM -->
+      <section class="view" data-view="team">
+        <header class="view-head">
+          <div>
+            <span class="crumb">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              Team
+            </span>
+            <h1>Team directory</h1>
+            <p>480 specialists across 12 offices worldwide.</p>
+          </div>
+        </header>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3>Core team</h3>
+              <span class="sub">Senior leadership and desk heads</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Role</th>
+                  <th>Desk</th>
+                  <th>Office</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="cell-client">
+                      <span class="cell-avatar">EM</span>
+                      <div class="info">
+                        <p>Eleanor Marsh</p>
+                        <span>eleanor@stackly.io</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Managing Partner</td>
+                  <td>Executive</td>
+                  <td>London</td>
+                  <td><span class="badge success">Available</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-client">
+                      <span class="cell-avatar">JK</span>
+                      <div class="info">
+                        <p>James Kwan</p>
+                        <span>james@stackly.io</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Head of Capital Markets</td>
+                  <td>Capital markets</td>
+                  <td>Singapore</td>
+                  <td><span class="badge warn">In meeting</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-client">
+                      <span class="cell-avatar">SM</span>
+                      <div class="info">
+                        <p>Sofia Marchetti</p>
+                        <span>sofia@stackly.io</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Head of Risk</td>
+                  <td>Risk &amp; regulatory</td>
+                  <td>Zurich</td>
+                  <td><span class="badge success">Available</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-client">
+                      <span class="cell-avatar">RM</span>
+                      <div class="info">
+                        <p>Rajiv Mehta</p>
+                        <span>rajiv@stackly.io</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Senior Analyst</td>
+                  <td>Capital markets</td>
+                  <td>London</td>
+                  <td><span class="badge success">Available</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-client">
+                      <span class="cell-avatar">AC</span>
+                      <div class="info">
+                        <p>Amara Chen</p>
+                        <span>amara@stackly.io</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Head of Portfolio Strategy</td>
+                  <td>Portfolio strategy</td>
+                  <td>New York</td>
+                  <td><span class="badge info">Traveling</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="cell-client">
+                      <span class="cell-avatar">LN</span>
+                      <div class="info">
+                        <p>Liam Novak</p>
+                        <span>liam@stackly.io</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>Head of Treasury</td>
+                  <td>Treasury</td>
+                  <td>Frankfurt</td>
+                  <td><span class="badge success">Available</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- REPORTS -->
+      <section class="view" data-view="reports">
+        <header class="view-head">
+          <div>
+            <span class="crumb">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M4 4h16v16H4z" />
+                <path d="M8 8h8M8 12h8M8 16h5" />
+              </svg>
+              Reports
+            </span>
+            <h1>All reports</h1>
+            <p>
+              Board packs, regulatory filings, mandate summaries and analytics
+              exports.
+            </p>
+          </div>
+          <div class="view-actions">
+            <button class="btn-primary go-404" type="button">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              Generate report
+            </button>
+          </div>
+        </header>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Report</th>
+                  <th>Type</th>
+                  <th>Period</th>
+                  <th>Generated</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Q3 Board Pack</strong></td>
+                  <td>Board</td>
+                  <td>Q3 2026</td>
+                  <td>Oct 15, 2026</td>
+                  <td><span class="badge success">Ready</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Regulatory filing — Basel III</strong></td>
+                  <td>Regulatory</td>
+                  <td>Sep 2026</td>
+                  <td>Oct 12, 2026</td>
+                  <td><span class="badge success">Submitted</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Mandate summary — Northbridge</strong></td>
+                  <td>Client</td>
+                  <td>Q3 2026</td>
+                  <td>Oct 10, 2026</td>
+                  <td><span class="badge success">Sent</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Risk review — Solstice Life</strong></td>
+                  <td>Risk</td>
+                  <td>Q3 2026</td>
+                  <td>Oct 8, 2026</td>
+                  <td><span class="badge info">In review</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Treasury position — Meridian</strong></td>
+                  <td>Client</td>
+                  <td>Oct 2026</td>
+                  <td>Oct 7, 2026</td>
+                  <td><span class="badge warn">Draft</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Annual performance — Pacific Sovereign</strong>
+                  </td>
+                  <td>Client</td>
+                  <td>FY 2025</td>
+                  <td>Oct 4, 2026</td>
+                  <td><span class="badge success">Sent</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPLIANCE -->
+      <section class="view" data-view="compliance">
+        <header class="view-head">
+          <div>
+            <span class="crumb">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12 2 4 6v6c0 5 3.4 8.8 8 10 4.6-1.2 8-5 8-10V6l-8-4Z"
+                />
+                <polyline points="9 12 11 14 15 10" />
+              </svg>
+              Compliance
+            </span>
+            <h1>Regulatory &amp; compliance</h1>
+            <p>Supervisory readiness, audit trail and internal controls.</p>
+          </div>
+        </header>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Compliance checklist</h3>
+                <span class="sub">Current quarter</span>
+              </div>
+            </div>
+            <div class="setting-item">
+              <div class="info">
+                <p>Basel III reporting</p>
+                <span>Filed Oct 12</span>
+              </div>
+              <span class="badge success">Complete</span>
+            </div>
+            <div class="setting-item">
+              <div class="info">
+                <p>DORA operational resilience</p>
+                <span>Reviewed Oct 9</span>
+              </div>
+              <span class="badge success">Complete</span>
+            </div>
+            <div class="setting-item">
+              <div class="info">
+                <p>Model risk validation</p>
+                <span>In progress</span>
+              </div>
+              <span class="badge info">In review</span>
+            </div>
+            <div class="setting-item">
+              <div class="info">
+                <p>AML/KYC annual refresh</p>
+                <span>Due Nov 15</span>
+              </div>
+              <span class="badge warn">Pending</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Recent audit trail</h3>
+                <span class="sub">Immutable log</span>
+              </div>
+            </div>
+            <ul class="activity">
+              <li>
+                <span class="a-icon"
+                  ><svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg
+                ></span>
+                <div class="a-body">
+                  <p class="a-title">
+                    Q3 board pack approved by <strong>E. Marsh</strong>.
+                  </p>
+                  <span class="a-time">2 hours ago</span>
+                </div>
+              </li>
+              <li>
+                <span class="a-icon blue"
+                  ><svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="4" y="10" width="16" height="10" rx="2" />
+                    <path d="M8 10V7a4 4 0 0 1 8 0v3" /></svg
+                ></span>
+                <div class="a-body">
+                  <p class="a-title">
+                    New user role assigned — <strong>Analyst</strong> for R.
+                    Mehta.
+                  </p>
+                  <span class="a-time">Yesterday</span>
+                </div>
+              </li>
+              <li>
+                <span class="a-icon"
+                  ><svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" /></svg
+                ></span>
+                <div class="a-body">
+                  <p class="a-title">
+                    Solstice Life risk review marked complete.
+                  </p>
+                  <span class="a-time">2 days ago</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="view" data-view="settings">
+        <header class="view-head">
+          <div>
+            <span class="crumb">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="12" cy="12" r="3" />
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"
+                />
+              </svg>
+              Settings
+            </span>
+            <h1>Admin settings</h1>
+            <p>Manage your profile, preferences and system configuration.</p>
+          </div>
+          <div class="view-actions">
+            <button class="btn-primary" id="saveSettingsBtn" type="button">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Save changes
+            </button>
+          </div>
+        </header>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Profile</h3>
+                <span class="sub">All fields are required</span>
+              </div>
+            </div>
+
+            <form id="settingsForm" novalidate>
+              <div class="settings-row">
+                <div class="field">
+                  <label for="s-name"
+                    >Full name <span class="req">*</span></label
+                  >
+                  <input
+                    id="s-name"
+                    type="text"
+                    placeholder="Jane Doe"
+                    autocomplete="name"
+                  />
+                  <p class="field-err" id="s-name-err" role="alert"></p>
+                </div>
+                <div class="field">
+                  <label for="s-email">Email <span class="req">*</span></label>
+                  <input
+                    id="s-email"
+                    type="email"
+                    placeholder="you@company.com"
+                    autocomplete="email"
+                  />
+                  <p class="field-err" id="s-email-err" role="alert"></p>
+                </div>
+              </div>
+
+              <div class="settings-row">
+                <div class="field">
+                  <label for="s-role">Role <span class="req">*</span></label>
+                  <select id="s-role">
+                    <option value="">Select a role</option>
+                    <option value="administrator">Administrator</option>
+                    <option value="analyst">Analyst</option>
+                    <option value="observer">Observer</option>
+                  </select>
+                  <p class="field-err" id="s-role-err" role="alert"></p>
+                </div>
+                <div class="field">
+                  <label for="s-office"
+                    >Office <span class="req">*</span></label
+                  >
+                  <select id="s-office">
+                    <option value="">Select an office</option>
+                    <option value="london">London</option>
+                    <option value="new-york">New York</option>
+                    <option value="singapore">Singapore</option>
+                    <option value="zurich">Zurich</option>
+                    <option value="frankfurt">Frankfurt</option>
+                  </select>
+                  <p class="field-err" id="s-office-err" role="alert"></p>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="s-bio">Bio <span class="req">*</span></label>
+                <textarea
+                  id="s-bio"
+                  rows="3"
+                  placeholder="A short description of your role"
+                ></textarea>
+                <p class="field-err" id="s-bio-err" role="alert"></p>
+              </div>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h3>Preferences</h3>
+                <span class="sub">Notifications &amp; system behavior</span>
+              </div>
+            </div>
+
+            <div class="setting-item">
+              <div class="info">
+                <p>Email notifications</p>
+                <span>Receive mandate and settlement updates</span>
+              </div>
+              <label class="switch"
+                ><input type="checkbox" checked class="go-404-checkbox" /><span
+                  class="track"
+                ></span
+              ></label>
+            </div>
+
+            <div class="setting-item">
+              <div class="info">
+                <p>Two-factor authentication</p>
+                <span>Require a 2FA code on every login</span>
+              </div>
+              <label class="switch"
+                ><input type="checkbox" checked class="go-404-checkbox" /><span
+                  class="track"
+                ></span
+              ></label>
+            </div>
+
+            <div class="setting-item">
+              <div class="info">
+                <p>Weekly digest</p>
+                <span>Send a summary every Monday morning</span>
+              </div>
+              <label class="switch"
+                ><input type="checkbox" class="go-404-checkbox" /><span
+                  class="track"
+                ></span
+              ></label>
+            </div>
+
+            <div class="setting-item">
+              <div class="info">
+                <p>Analytics tracking</p>
+                <span>Share anonymous usage data</span>
+              </div>
+              <label class="switch"
+                ><input type="checkbox" checked class="go-404-checkbox" /><span
+                  class="track"
+                ></span
+              ></label>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <script>
+      /* =========================================================
+         1 · SESSION
+         ========================================================= */
+      function readSession() {
+        let email = "";
+        let name = "";
+        try {
+          email =
+            localStorage.getItem("stackly_email") ||
+            localStorage.getItem("stackly_admin_email") ||
+            "";
+          name =
+            localStorage.getItem("stackly_name") ||
+            localStorage.getItem("stackly_admin_name") ||
+            "";
+        } catch (e) {}
+        if (!name && email) {
+          const local = email.split("@")[0];
+          name = local
+            .replace(/[._-]/g, " ")
+            .replace(/\b\w/g, (c) => c.toUpperCase());
+        }
+        if (!name) name = "Admin";
+        const initial = name.trim().charAt(0).toUpperCase() || "A";
+
+        const topName = document.getElementById("userName");
+        const topAvatar = document.getElementById("userAvatar");
+        const dashName = document.getElementById("dashName");
+        if (topName) topName.textContent = name.split(" ")[0];
+        if (topAvatar) topAvatar.textContent = initial;
+        if (dashName) dashName.textContent = name.split(" ")[0];
+      }
+      readSession();
+
+      const dashDate = document.getElementById("dashDate");
+      if (dashDate) {
+        dashDate.textContent = new Date().toLocaleDateString("en-GB", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+        });
+      }
+
+      /* =========================================================
+         2 · SIDEBAR
+         ========================================================= */
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("overlay");
+      const hamburger = document.getElementById("hamburger");
+
+      function openSidebar() {
+        if (!sidebar) return;
+        sidebar.classList.add("is-open");
+        overlay.classList.add("is-open");
+        hamburger.classList.add("is-active");
+        hamburger.setAttribute("aria-expanded", "true");
+        document.body.style.overflow = "hidden";
+      }
+      function closeSidebar() {
+        if (!sidebar) return;
+        sidebar.classList.remove("is-open");
+        overlay.classList.remove("is-open");
+        hamburger.classList.remove("is-active");
+        hamburger.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+      }
+      function toggleSidebar() {
+        if (sidebar.classList.contains("is-open")) closeSidebar();
+        else openSidebar();
+      }
+      hamburger && hamburger.addEventListener("click", toggleSidebar);
+      overlay && overlay.addEventListener("click", closeSidebar);
+      window.addEventListener("resize", function () {
+        if (window.innerWidth >= 992 && sidebar.classList.contains("is-open")) {
+          closeSidebar();
+        }
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && sidebar.classList.contains("is-open")) {
+          closeSidebar();
+        }
+      });
+
+      /* =========================================================
+         3 · GLOBAL 404 REDIRECT
+         Every clickable with .go-404 (and any <a href="./404.html">)
+         goes to the 404 page. Logo (a.navbar-brand) is NOT touched.
+         ========================================================= */
+      function goTo404(e) {
+        if (e) e.preventDefault();
+        window.location.href = "./404.html";
+      }
+
+      document.querySelectorAll(".go-404").forEach(function (el) {
+        el.addEventListener("click", function (e) {
+          // Buttons — prevent default and navigate
+          // Links with href to 404 already work; buttons need this
+          if (el.tagName === "BUTTON" || el.tagName === "A") {
+            goTo404(e);
+          }
+        });
+      });
+
+      // Checkbox toggles in Preferences → 404
+      document.querySelectorAll(".go-404-checkbox").forEach(function (cb) {
+        cb.addEventListener("change", function () {
+          goTo404();
+        });
+      });
+
+      /* =========================================================
+         4 · VIEW SWITCHING
+         ========================================================= */
+      const navLinks = Array.from(
+        document.querySelectorAll(".nav-link[data-view]"),
+      );
+      const views = Array.from(document.querySelectorAll(".view"));
+
+      function switchView(viewName) {
+        views.forEach(function (v) {
+          v.classList.toggle("is-active", v.dataset.view === viewName);
+        });
+        navLinks.forEach(function (l) {
+          l.classList.toggle("is-active", l.dataset.view === viewName);
+        });
+        if (history.replaceState) {
+          history.replaceState(null, "", "#" + viewName);
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (window.innerWidth < 992) closeSidebar();
+        if (viewName === "dashboard") animateGoals();
+      }
+
+      navLinks.forEach(function (link) {
+        link.addEventListener("click", function () {
+          switchView(link.dataset.view);
+        });
+      });
+
+      (function initView() {
+        const hash = (location.hash || "").replace("#", "");
+        if (hash) {
+          const target = document.querySelector(
+            '.view[data-view="' + hash + '"]',
+          );
+          if (target) switchView(hash);
+        }
+      })();
+
+      /* =========================================================
+         5 · GOAL BAR ANIMATION
+         ========================================================= */
+      function animateGoals() {
+        document.querySelectorAll(".goal-fill").forEach(function (el) {
+          const target = parseInt(el.dataset.fill, 10) || 0;
+          el.style.width = "0%";
+          setTimeout(function () {
+            el.style.width = target + "%";
+          }, 100);
+        });
+      }
+
+      /* =========================================================
+         6 · SETTINGS FORM VALIDATION
+         All fields mandatory — inline errors on save
+         ========================================================= */
+      const settingsForm = document.getElementById("settingsForm");
+      const saveBtn = document.getElementById("saveSettingsBtn");
+
+      const fields = {
+        name: {
+          el: document.getElementById("s-name"),
+          err: document.getElementById("s-name-err"),
+        },
+        email: {
+          el: document.getElementById("s-email"),
+          err: document.getElementById("s-email-err"),
+        },
+        role: {
+          el: document.getElementById("s-role"),
+          err: document.getElementById("s-role-err"),
+        },
+        office: {
+          el: document.getElementById("s-office"),
+          err: document.getElementById("s-office-err"),
+        },
+        bio: {
+          el: document.getElementById("s-bio"),
+          err: document.getElementById("s-bio-err"),
+        },
+      };
+
+      const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+
+      function setErr(field, msg) {
+        if (!field.el || !field.err) return;
+        field.el.classList.add("is-invalid");
+        field.err.textContent = msg;
+        field.err.classList.add("show");
+      }
+      function clearErr(field) {
+        if (!field.el || !field.err) return;
+        field.el.classList.remove("is-invalid");
+        field.err.classList.remove("show");
+        field.err.textContent = "";
+      }
+
+      // Live-clear on valid input
+      Object.keys(fields).forEach(function (key) {
+        const f = fields[key];
+        if (!f.el) return;
+        const evt = f.el.tagName === "SELECT" ? "change" : "input";
+        f.el.addEventListener(evt, function () {
+          const v = (f.el.value || "").trim();
+          if (!v) return;
+          if (key === "email" && !EMAIL_RE.test(v)) return;
+          clearErr(f);
+        });
+      });
+
+      function validateSettings() {
+        let ok = true;
+
+        // Name
+        const name = (fields.name.el.value || "").trim();
+        if (!name) {
+          setErr(fields.name, "Full name is required.");
+          ok = false;
+        } else if (name.length < 2) {
+          setErr(fields.name, "Please enter at least 2 characters.");
+          ok = false;
+        } else {
+          clearErr(fields.name);
+        }
+
+        // Email
+        const email = (fields.email.el.value || "").trim();
+        if (!email) {
+          setErr(fields.email, "Email address is required.");
+          ok = false;
+        } else if (!EMAIL_RE.test(email)) {
+          setErr(fields.email, "Please enter a valid email address.");
+          ok = false;
+        } else {
+          clearErr(fields.email);
+        }
+
+        // Role
+        const role = (fields.role.el.value || "").trim();
+        if (!role) {
+          setErr(fields.role, "Please select a role.");
+          ok = false;
+        } else {
+          clearErr(fields.role);
+        }
+
+        // Office
+        const office = (fields.office.el.value || "").trim();
+        if (!office) {
+          setErr(fields.office, "Please select an office.");
+          ok = false;
+        } else {
+          clearErr(fields.office);
+        }
+
+        // Bio
+        const bio = (fields.bio.el.value || "").trim();
+        if (!bio) {
+          setErr(fields.bio, "Bio is required.");
+          ok = false;
+        } else if (bio.length < 10) {
+          setErr(fields.bio, "Please write at least 10 characters.");
+          ok = false;
+        } else {
+          clearErr(fields.bio);
+        }
+
+        return ok;
+      }
+
+      if (saveBtn) {
+        saveBtn.addEventListener("click", function () {
+          if (!validateSettings()) {
+            // Focus first invalid field
+            const firstInvalid = document.querySelector(".field .is-invalid");
+            if (firstInvalid) firstInvalid.focus();
+            return;
+          }
+          // All good → redirect to 404 (per global rule)
+          window.location.href = "./404.html";
+        });
+      }
+
+      /* =========================================================
+         7 · CHARTS
+         ========================================================= */
+      function ready(fn) {
+        if (document.readyState !== "loading") fn();
+        else document.addEventListener("DOMContentLoaded", fn);
+      }
+
+      ready(function () {
+        if (typeof Chart === "undefined") return;
+
+        Chart.defaults.color = "#8a94a8";
+        Chart.defaults.font.family = "'Inter', system-ui, sans-serif";
+        Chart.defaults.font.size = 11;
+        Chart.defaults.borderColor = "rgba(255,255,255,0.06)";
+        Chart.defaults.plugins.legend.display = false;
+
+        const revCanvas = document.getElementById("revenueChart");
+        if (revCanvas) {
+          const ctx = revCanvas.getContext("2d");
+          const grad = ctx.createLinearGradient(0, 0, 0, 300);
+          grad.addColorStop(0, "rgba(0, 229, 160, 0.38)");
+          grad.addColorStop(1, "rgba(0, 229, 160, 0)");
+
+          new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: [
+                "Nov",
+                "Dec",
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+              ],
+              datasets: [
+                {
+                  data: [
+                    268, 274, 281, 289, 296, 302, 308, 314, 322, 328, 336,
+                    342.8,
+                  ],
+                  borderColor: "#00e5a0",
+                  backgroundColor: grad,
+                  fill: true,
+                  tension: 0.4,
+                  borderWidth: 2,
+                  pointRadius: 0,
+                  pointHoverRadius: 5,
+                  pointHoverBackgroundColor: "#00e5a0",
+                  pointHoverBorderColor: "#04140e",
+                  pointHoverBorderWidth: 2,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              interaction: { intersect: false, mode: "index" },
+              plugins: {
+                tooltip: {
+                  backgroundColor: "rgba(11, 20, 36, 0.96)",
+                  borderColor: "rgba(0, 229, 160, 0.3)",
+                  borderWidth: 1,
+                  titleColor: "#f5f7fb",
+                  bodyColor: "#f5f7fb",
+                  padding: 12,
+                  cornerRadius: 10,
+                  displayColors: false,
+                  callbacks: {
+                    label: (c) => "$" + c.parsed.y.toFixed(1) + "B",
+                  },
+                },
+              },
+              scales: {
+                x: { grid: { display: false }, ticks: { color: "#6d778c" } },
+                y: {
+                  grid: { color: "rgba(255,255,255,0.05)" },
+                  ticks: { color: "#6d778c", callback: (v) => "$" + v + "B" },
+                },
+              },
+            },
+          });
+        }
+
+        const allocCanvas = document.getElementById("allocationChart");
+        if (allocCanvas) {
+          new Chart(allocCanvas.getContext("2d"), {
+            type: "doughnut",
+            data: {
+              labels: ["Equities", "Fixed income", "Alternatives", "Cash"],
+              datasets: [
+                {
+                  data: [42, 31, 18, 9],
+                  backgroundColor: ["#00e5a0", "#4db8ff", "#ffb84d", "#8a94a8"],
+                  borderColor: "#0e1729",
+                  borderWidth: 3,
+                  hoverOffset: 6,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              cutout: "68%",
+              plugins: {
+                tooltip: {
+                  backgroundColor: "rgba(11, 20, 36, 0.96)",
+                  borderColor: "rgba(0, 229, 160, 0.3)",
+                  borderWidth: 1,
+                  titleColor: "#f5f7fb",
+                  bodyColor: "#f5f7fb",
+                  padding: 12,
+                  cornerRadius: 10,
+                  callbacks: { label: (c) => c.label + ": " + c.parsed + "%" },
+                },
+              },
+            },
+          });
+        }
+
+        const analyticsCanvas = document.getElementById("analyticsChart");
+        if (analyticsCanvas) {
+          new Chart(analyticsCanvas.getContext("2d"), {
+            type: "bar",
+            data: {
+              labels: [
+                "Capital markets",
+                "Portfolio strategy",
+                "Risk & regulatory",
+                "Treasury",
+                "Wealth & FO",
+                "Research",
+              ],
+              datasets: [
+                {
+                  data: [7.0, 4.96, 3.5, 2.94, 1.4, 1.1],
+                  backgroundColor: [
+                    "#00e5a0",
+                    "#33edb6",
+                    "#4db8ff",
+                    "#7cf7d8",
+                    "#ffb84d",
+                    "#8a94a8",
+                  ],
+                  borderRadius: 8,
+                  borderSkipped: false,
+                  barThickness: 28,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                tooltip: {
+                  backgroundColor: "rgba(11, 20, 36, 0.96)",
+                  borderColor: "rgba(0, 229, 160, 0.3)",
+                  borderWidth: 1,
+                  titleColor: "#f5f7fb",
+                  bodyColor: "#f5f7fb",
+                  padding: 12,
+                  cornerRadius: 10,
+                  displayColors: false,
+                  callbacks: {
+                    label: (c) => "$" + c.parsed.y.toFixed(2) + "M",
+                  },
+                },
+              },
+              scales: {
+                x: {
+                  grid: { display: false },
+                  ticks: { color: "#6d778c", font: { size: 10 } },
+                },
+                y: {
+                  grid: { color: "rgba(255,255,255,0.05)" },
+                  ticks: { color: "#6d778c", callback: (v) => "$" + v + "M" },
+                },
+              },
+            },
+          });
+        }
+
+        const analyticsDonut = document.getElementById("analyticsDonut");
+        if (analyticsDonut) {
+          new Chart(analyticsDonut.getContext("2d"), {
+            type: "doughnut",
+            data: {
+              labels: [
+                "Capital markets",
+                "Portfolio strategy",
+                "Risk & regulatory",
+                "Treasury",
+              ],
+              datasets: [
+                {
+                  data: [38, 27, 19, 16],
+                  backgroundColor: ["#00e5a0", "#4db8ff", "#ffb84d", "#8a94a8"],
+                  borderColor: "#0e1729",
+                  borderWidth: 3,
+                  hoverOffset: 6,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              cutout: "68%",
+              plugins: {
+                tooltip: {
+                  backgroundColor: "rgba(11, 20, 36, 0.96)",
+                  borderColor: "rgba(0, 229, 160, 0.3)",
+                  borderWidth: 1,
+                  titleColor: "#f5f7fb",
+                  bodyColor: "#f5f7fb",
+                  padding: 12,
+                  cornerRadius: 10,
+                  callbacks: { label: (c) => c.label + ": " + c.parsed + "%" },
+                },
+              },
+            },
+          });
+        }
+
+        animateGoals();
+      });
+    </script>
+  </body>
+</html>
